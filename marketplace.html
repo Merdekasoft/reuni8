@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marketplace Sederhana</title>
   <style>
-    body { font-family: sans-serif; margin: 10px; font-size: 14px; color: #333; background-color: #f9f9f9; }
+    body {
+      font-family: sans-serif;
+      margin: 10px;
+      font-size: 14px;
+      color: #333;
+      background-color: #f9f9f9;
+    }
     #search-bar {
       display: flex;
       justify-content: center;
@@ -31,24 +37,66 @@
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       }
     }
-    .product-card {
-      position: relative;
+    .product-card, .product-detail {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       border: 1px solid #ddd;
       padding: 8px;
       border-radius: 6px;
       text-align: center;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
-      font-size: 13px;
       background-color: #fff;
     }
-    .product-card:hover { transform: scale(1.02); }
-    .product-image { max-width: 100%; height: auto; margin-bottom: 6px; border-radius: 4px; }
-    .product-title { font-weight: normal; margin-bottom: 2px; font-size: 13px; color: #222; }
-    .product-price { color: #2a7b2e; font-weight: bold; margin: 2px 0 8px 0; font-size: 14px; }
-    #loading { text-align: center; font-style: italic; font-size: 13px; }
-    #error { color: red; text-align: center; display: none; font-size: 13px; }
-    #no-results { display: none; text-align: center; font-style: italic; color: #888; font-size: 13px; }
+    .product-card:hover {
+      transform: scale(1.02);
+    }
+    .product-card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .product-image {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+    .product-title {
+      font-weight: normal;
+      font-size: 13px;
+      color: #222;
+      margin: 0;
+    }
+    .product-price {
+      color: #2a7b2e;
+      font-weight: bold;
+      font-size: 14px;
+      margin: 0;
+    }
+    .beli-button {
+      margin-top: 6px;
+    }
+    #loading {
+      text-align: center;
+      font-style: italic;
+      font-size: 13px;
+    }
+    #error {
+      color: red;
+      text-align: center;
+      display: none;
+      font-size: 13px;
+    }
+    #no-results {
+      display: none;
+      text-align: center;
+      font-style: italic;
+      color: #888;
+      font-size: 13px;
+    }
     button {
       padding: 6px 16px;
       border: none;
@@ -58,7 +106,9 @@
       cursor: pointer;
       font-size: 13px;
     }
-    button:hover { background-color: #218838; }
+    button:hover {
+      background-color: #218838;
+    }
     .product-label {
       position: absolute;
       top: 8px;
@@ -72,8 +122,14 @@
       animation: fadeIn 0.3s ease-in-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   </style>
 </head>
@@ -81,7 +137,6 @@
   <div id="search-bar">
     <input type="text" id="search-input" placeholder="Cari produk...">
   </div>
-
   <div id="loading">Memuat produk...</div>
   <div id="error">Terjadi kesalahan saat memuat data.</div>
   <div id="no-results">Produk tidak ditemukan.</div>
@@ -89,7 +144,6 @@
 
   <script>
     const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
-
     const productContainer = document.getElementById('product-container');
     const loadingElement = document.getElementById('loading');
     const errorElement = document.getElementById('error');
@@ -109,23 +163,8 @@
       return '';
     }
 
-    function loadProducts() {
-      fetch(tsvUrl)
-        .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.text();
-        })
-        .then(tsvText => {
-          loadingElement.style.display = 'none';
-          const data = parseTSV(tsvText);
-          allProducts = data.slice(1); // skip header
-          displayProducts(allProducts);
-        })
-        .catch(error => {
-          loadingElement.style.display = 'none';
-          errorElement.style.display = 'block';
-          console.error('Gagal memuat data dari TSV:', error);
-        });
+    function createSlug(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
 
     function displayProducts(productData) {
@@ -136,35 +175,4 @@
         const priceRaw = product[2] || '';
         const cleanedPrice = priceRaw.replace(/[^\d]/g, '');
         const price = cleanedPrice ? parseInt(cleanedPrice, 10) : 0;
-
-        const label = getLabel(title);
-
-        const productCard = document.createElement('div');
-        productCard.classList.add('product-card');
-
-        productCard.innerHTML = `
-          ${label ? `<div class="product-label">${label}</div>` : ''}
-          <img src="${image}" alt="${title}" class="product-image">
-          <h3 class="product-title">${title}</h3>
-          <p class="product-price"><strong>${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</strong></p>
-          <button>Beli Langsung</button>
-        `;
-
-        productContainer.appendChild(productCard);
-      });
-
-      noResultsElement.style.display = productData.length === 0 ? 'block' : 'none';
-    }
-
-    searchInput.addEventListener('input', () => {
-      const keyword = searchInput.value.toLowerCase();
-      const filtered = allProducts.filter(product =>
-        product[0].toLowerCase().includes(keyword)
-      );
-      displayProducts(filtered);
-    });
-
-    loadProducts();
-  </script>
-</body>
-</html>
+        const label = getLabel(
