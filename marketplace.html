@@ -179,10 +179,10 @@
         const title = product[0];
         const image = product[1] || 'https://via.placeholder.com/150';
         const priceRaw = product[2] || '';
+        const buyLink = product[3] || '#';
         const cleanedPrice = priceRaw.replace(/[^\d]/g, '');
         const price = cleanedPrice ? parseInt(cleanedPrice, 10) : 0;
         const label = getLabel(title);
-        const slug = createSlug(title);
 
         const productCard = document.createElement('div');
         productCard.classList.add('product-card');
@@ -193,7 +193,7 @@
             <h3 class="product-title">${title}</h3>
             <p class="product-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
           </div>
-          <a href="/produk/${slug}" class="beli-button"><button>Beli Langsung</button></a>
+          <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
         `;
         productContainer.appendChild(productCard);
       });
@@ -209,11 +209,13 @@
       const title = match[0];
       const image = match[1] || 'https://via.placeholder.com/150';
       const price = parseInt((match[2] || '').replace(/[^\d]/g, ''), 10);
+      const buyLink = match[3] || '#';
       const html = `
         <div class="product-detail">
           <img src="${image}" alt="${title}" class="product-image">
           <h2 class="product-title">${title}</h2>
           <p class="product-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
+          <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
           <a href="/" class="beli-button"><button>Kembali</button></a>
         </div>
       `;
