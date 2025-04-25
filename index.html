@@ -94,9 +94,9 @@
     }
 
     .promo-card a {
-      text-decoration: none;
-      color: #fff;
-      background: #ff5722;
+      text-decoration: none;  /* Ensure underline is removed */
+      color: #fff;            /* Keep the text color white */
+      background: #ff5722;    /* Original background color */
       padding: 0.4rem 1rem;
       border-radius: 20px;
       display: inline-block;
@@ -105,7 +105,8 @@
     }
 
     .promo-card a:hover {
-      background: #e64a19;
+      background: #ff5722;    /* Keep the same background color on hover */
+      color: #fff;            /* Ensure text color remains white */
     }
 
     @media (max-width: 480px) {
