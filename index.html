@@ -19,24 +19,6 @@
       padding: 0;
     }
 
-    .search-bar {
-      background: white;
-      margin: 1rem auto;
-      max-width: 95%;
-      padding: 0.6rem 1rem;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .search-bar input {
-      border: none;
-      outline: none;
-      flex: 1;
-      font-size: 1rem;
-    }
-
     .grid-icons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -54,12 +36,15 @@
     }
 
     .banner {
-      background-color: #ffe0b2;
       text-align: center;
-      padding: 0.8rem;
-      font-weight: bold;
-      font-size: 1rem;
       margin: 1rem;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .banner img {
+      width: 100%;
+      height: auto;
       border-radius: 10px;
     }
 
@@ -88,19 +73,19 @@
     }
 
     .promo-card a {
-      color: #fff;            /* Keep the text color white */
-      background: #ff5722;    /* Original background color */
+      color: #fff;
+      background: #ff5722;
       padding: 0.4rem 1rem;
       border-radius: 20px;
       display: inline-block;
       margin-top: 0.5rem;
       font-size: 0.85rem;
-      text-decoration: none;  /* Remove underline */
+      text-decoration: none;
     }
 
     .promo-card a:hover {
-      background: #ff5722;    /* Keep the same background color on hover */
-      color: #fff;            /* Ensure text color remains white */
+      background: #ff5722;
+      color: #fff;
     }
 
     @media (max-width: 480px) {
@@ -166,10 +151,6 @@
 </head>
 <body>
 
-<div class="search-bar">
-  <input type="text" id="search-input" placeholder="Cari produk...">
-</div>
-
 <div class="grid-icons">
   <!-- Menggunakan ikon Font Awesome -->
   <div class="icon-box"><a href="https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v" target="_blank" style="text-decoration: none; color: inherit;"><i class="fab fa-whatsapp"></i> Grup WA</a></div>
@@ -178,7 +159,9 @@
   <div class="icon-box"><i class="fas fa-calendar-alt"></i> Jadwal</div>
 </div>
 
-<div class="banner">Undangan Resmi | Reuni Akbar SMPN 8 Cimahi</div>
+<div class="banner">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3U1N2dvbXk1OGNvczZ0MHZ4ZDN2aW11aHRrbmR6MWR0cDFvdzE2ciZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kHhFtx1CXYCwA/giphy.gif" alt="Reuni Akbar SMPN 8 Cimahi">
+</div>
 
 <div class="highlight-bar">🔥 Flash Info! Daftar & Donasi Sekarang</div>
 
@@ -189,13 +172,13 @@
   <div id="no-results" style="display:none;">Tidak ada produk yang ditemukan.</div>
 </div>
 
+<!-- Script tetap ada, tetapi bagian elemen search-bar sudah dihapus dari HTML -->
 <script>
   const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
   const productContainer = document.getElementById('product-container');
   const loadingElement = document.getElementById('loading');
   const errorElement = document.getElementById('error');
   const noResultsElement = document.getElementById('no-results');
-  const searchInput = document.getElementById('search-input');
   let allProducts = [];
 
   function parseTSV(tsv) {
@@ -240,67 +223,7 @@
     });
     noResultsElement.style.display = productData.length === 0 ? 'block' : 'none';
   }
-
-  function displayProductDetail(slug) {
-    const match = allProducts.find(p => createSlug(p[0]) === slug);
-    if (!match) {
-      productContainer.innerHTML = '<p>Produk tidak ditemukan.</p>';
-      return;
-    }
-    const title = match[0];
-    const image = match[1] || 'https://via.placeholder.com/150';
-    const price = parseInt((match[2] || '').replace(/[^\d]/g, ''), 10);
-    const buyLink = match[3] || '#';
-    const html = `
-      <div class="product-detail">
-        <img src="${image}" alt="${title}" class="product-image">
-        <h2 class="product-title">${title}</h2>
-        <p class="product-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
-        <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
-        <a href="/" class="beli-button"><button>Kembali</button></a>
-      </div>
-    `;
-    productContainer.innerHTML = html;
-  }
-
-  function initPage() {
-    const path = window.location.pathname;
-    const slugMatch = path.match(/^\/produk\/(.+)$/);
-    if (slugMatch) {
-      displayProductDetail(slugMatch[1]);
-    } else {
-      displayProducts(allProducts);
-    }
-  }
-
-  function loadProducts() {
-    fetch(tsvUrl)
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.text();
-      })
-      .then(tsvText => {
-        loadingElement.style.display = 'none';
-        const data = parseTSV(tsvText);
-        allProducts = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
-        displayProducts(allProducts);
-      })
-      .catch(err => {
-        loadingElement.style.display = 'none';
-        errorElement.style.display = 'block';
-      });
-  }
-
-  loadProducts();
-
-  searchInput.addEventListener('input', (e) => {
-    const filteredProducts = allProducts.filter(product =>
-      product[0].toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    displayProducts(filteredProducts);
-  });
-
-  window.onload = initPage;
 </script>
+
 </body>
 </html>
