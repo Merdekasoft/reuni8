@@ -2,98 +2,127 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reuni SMPN 8 Cimahi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
       font-family: 'Poppins', sans-serif;
+      background-color: #fff8f0;
       margin: 0;
-      background: linear-gradient(to right, #e0f7fa, #e0f2f1);
-      color: #333;
+      padding: 0;
     }
-    .container {
-      max-width: 600px;
-      margin: 30px auto;
-      padding: 20px;
-      background-color: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    .section-title {
-      margin-bottom: 15px;
-      font-weight: 600;
-      font-size: 1.4em;
-      color: #00796b;
-      border-bottom: 2px solid #00796b;
-      padding-bottom: 5px;
-    }
-    .info {
-      margin: 8px 0;
-      font-size: 1em;
-    }
-    .buttons {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .btn {
-      padding: 15px;
-      text-align: center;
-      border: none;
-      border-radius: 10px;
+
+    header {
+      background-color: #ff5722;
+      padding: 1rem;
       color: white;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    .search-bar {
+      background: white;
+      margin: 1rem auto;
+      max-width: 90%;
+      padding: 0.7rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 1rem;
+    }
+
+    .grid-icons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .icon-box {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .banner {
+      background-color: #ffe0b2;
+      text-align: center;
+      padding: 1rem;
       font-weight: bold;
-      cursor: pointer;
-      font-size: 1em;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-size: 1rem;
+      margin: 1rem;
+      border-radius: 10px;
     }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+
+    .promo-section {
+      margin: 1rem;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    .btn-wa {
-      background: #25D366;
+
+    .promo-card {
+      flex: 1 1 45%;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      text-align: center;
     }
-    .btn-daftar {
-      background: #546e7a;
+
+    .promo-card a {
+      text-decoration: none;
+      color: #fff;
+      background: #ff5722;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 0.5rem;
     }
-    .btn-donasi {
-      background: #00796b;
-    }
+
   </style>
-  <script>
-    async function fetchEventDetails() {
-      const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTn1Uv338HmxZ-6HFWB2xZnLkV_yBg_Ux4l43FGlsJ-pTeOFlzELyCYzA2UucSMAjf-3BCUCeMyWh5M/pub?gid=506604714&single=true&output=tsv');
-      const text = await response.text();
-      const lines = text.trim().split('\n');
-      const data = lines[1].split('\t');
-      const [tanggal, waktu, tempat] = data;
-
-      document.getElementById('tanggal').textContent = '📅 ' + tanggal;
-      document.getElementById('waktu').textContent = '⏰ ' + waktu;
-      document.getElementById('tempat').textContent = '📍 ' + tempat;
-    }
-
-    document.addEventListener('DOMContentLoaded', fetchEventDetails);
-  </script>
 </head>
 <body>
-  <div class="container">
-    <div class="section-title">Detail Acara</div>
-    <div class="info" id="tanggal"></div>
-    <div class="info" id="waktu"></div>
-    <div class="info" id="tempat"></div>
 
-    <div class="buttons">
-      <button class="btn btn-wa" onclick="window.open('https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v', '_blank')">🔗 Join Grup WhatsApp Reuni</button>
-      <button class="btn btn-daftar" onclick="window.open('https://forms.gle/xLwc73fXnMp8yffC6', '_blank')">📝 Daftar Sekarang</button>
-      <button class="btn btn-donasi" onclick="window.open('https://sociabuzz.com/reuni8/donate', '_blank')">💝 Donasi</button>
-    </div>
+<header>REUNI SMPN 8 CIMAHI</header>
+
+<div class="search-bar">
+  <input type="text" placeholder="Cari teman, kenangan, atau informasi...">
+</div>
+
+<div class="grid-icons">
+  <div class="icon-box">Grup WA</div>
+  <div class="icon-box">Pendaftaran</div>
+  <div class="icon-box">Donasi</div>
+  <div class="icon-box">Jadwal Acara</div>
+</div>
+
+<div class="banner">Undangan Resmi | Reuni Akbar SMPN 8 Cimahi</div>
+
+<div class="promo-section">
+  <div class="promo-card">
+    <div>Gabung Grup WhatsApp</div>
+    <a href="#">Gabung</a>
   </div>
+  <div class="promo-card">
+    <div>Isi Form Pendaftaran</div>
+    <a href="#">Daftar</a>
+  </div>
+  <div class="promo-card">
+    <div>Bantu Donasi</div>
+    <a href="#">Donasi</a>
+  </div>
+</div>
+
 </body>
 </html>
