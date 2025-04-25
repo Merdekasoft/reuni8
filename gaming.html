@@ -82,7 +82,7 @@
       font-size: 14px;
       margin: 0;
     }
-    .beli-button {
+    .mainkan-button {
       margin-top: 6px;
     }
     #loading {
@@ -193,7 +193,7 @@
             <h3 class="game-title">${title}</h3>
             <p class="game-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
           </div>
-          <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
+          <a href="${buyLink}" target="_blank" class="mainkan-button"><button>Mainkan</button></a>
         `;
         gameContainer.appendChild(gameCard);
       });
@@ -215,8 +215,8 @@
           <img src="${image}" alt="${title}" class="game-image">
           <h2 class="game-title">${title}</h2>
           <p class="game-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
-          <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
-          <a href="/" class="beli-button"><button>Kembali</button></a>
+          <a href="${buyLink}" target="_blank" class="mainkan-button"><button>Mainkan</button></a>
+          <a href="/" class="mainkan-button"><button>Kembali</button></a>
         </div>
       `;
       gameContainer.innerHTML = html;
