@@ -112,12 +112,62 @@
         padding: 0.8rem;
       }
     }
+
+    .product-card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .product-label {
+      background-color: #ff5722;
+      color: white;
+      padding: 0.4rem;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .product-card-content {
+      padding: 1rem;
+    }
+
+    .product-image {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .product-title {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-size: 0.9rem;
+      color: #ff5722;
+    }
+
+    .beli-button button {
+      background-color: #ff5722;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .beli-button button:hover {
+      background-color: #e64a19;
+    }
   </style>
 </head>
 <body>
 
 <div class="search-bar">
-  <input type="text" placeholder="Cari teman, kenangan, atau informasi...">
+  <input type="text" id="search-input" placeholder="Cari produk...">
 </div>
 
 <div class="grid-icons">
@@ -132,20 +182,125 @@
 
 <div class="highlight-bar">🔥 Flash Info! Daftar & Donasi Sekarang</div>
 
-<div class="promo-section">
-  <div class="promo-card">
-    <div>Gabung Grup WhatsApp</div>
-    <a href="https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v" target="_blank" style="text-decoration: none; color: inherit;">Gabung</a>
-  </div>
-  <div class="promo-card">
-    <div>Isi Form Pendaftaran</div>
-    <a href="https://forms.gle/xLwc73fXnMp8yffC6" target="_blank" style="text-decoration: none; color: inherit;">Daftar</a>
-  </div>
-  <div class="promo-card">
-    <div>Bantu Donasi</div>
-    <a href="https://sociabuzz.com/reuni8/donate" target="_blank" style="text-decoration: none; color: inherit;">Donasi</a>
-  </div>
+<div class="promo-section" id="product-container">
+  <!-- Produk akan dimuat di sini -->
+  <div id="loading">Loading...</div>
+  <div id="error" style="display:none;">Gagal memuat produk.</div>
+  <div id="no-results" style="display:none;">Tidak ada produk yang ditemukan.</div>
 </div>
 
+<script>
+  const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
+  const productContainer = document.getElementById('product-container');
+  const loadingElement = document.getElementById('loading');
+  const errorElement = document.getElementById('error');
+  const noResultsElement = document.getElementById('no-results');
+  const searchInput = document.getElementById('search-input');
+  let allProducts = [];
+
+  function parseTSV(tsv) {
+    const lines = tsv.trim().split('\n');
+    return lines.map(line => line.split('\t'));
+  }
+
+  function getLabel(title) {
+    const lower = title.toLowerCase();
+    if (lower.includes('terlaris')) return 'Produk Terlaris';
+    if (lower.includes('baru')) return 'Baru';
+    return '';
+  }
+
+  function createSlug(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  function displayProducts(productData) {
+    productContainer.innerHTML = '';
+    productData.forEach(product => {
+      const title = product[0];
+      const image = product[1] || 'https://via.placeholder.com/150';
+      const priceRaw = product[2] || '';
+      const buyLink = product[3] || '#';
+      const cleanedPrice = priceRaw.replace(/[^\d]/g, '');
+      const price = cleanedPrice ? parseInt(cleanedPrice, 10) : 0;
+      const label = getLabel(title);
+
+      const productCard = document.createElement('div');
+      productCard.classList.add('product-card');
+      productCard.innerHTML = `
+        ${label ? `<div class="product-label">${label}</div>` : ''}
+        <div class="product-card-content">
+          <img src="${image}" alt="${title}" class="product-image">
+          <h3 class="product-title">${title}</h3>
+          <p class="product-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
+        </div>
+        <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
+      `;
+      productContainer.appendChild(productCard);
+    });
+    noResultsElement.style.display = productData.length === 0 ? 'block' : 'none';
+  }
+
+  function displayProductDetail(slug) {
+    const match = allProducts.find(p => createSlug(p[0]) === slug);
+    if (!match) {
+      productContainer.innerHTML = '<p>Produk tidak ditemukan.</p>';
+      return;
+    }
+    const title = match[0];
+    const image = match[1] || 'https://via.placeholder.com/150';
+    const price = parseInt((match[2] || '').replace(/[^\d]/g, ''), 10);
+    const buyLink = match[3] || '#';
+    const html = `
+      <div class="product-detail">
+        <img src="${image}" alt="${title}" class="product-image">
+        <h2 class="product-title">${title}</h2>
+        <p class="product-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
+        <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
+        <a href="/" class="beli-button"><button>Kembali</button></a>
+      </div>
+    `;
+    productContainer.innerHTML = html;
+  }
+
+  function initPage() {
+    const path = window.location.pathname;
+    const slugMatch = path.match(/^\/produk\/(.+)$/);
+    if (slugMatch) {
+      displayProductDetail(slugMatch[1]);
+    } else {
+      displayProducts(allProducts);
+    }
+  }
+
+  function loadProducts() {
+    fetch(tsvUrl)
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+      })
+      .then(tsvText => {
+        loadingElement.style.display = 'none';
+        const data = parseTSV(tsvText);
+        allProducts = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
+        displayProducts(allProducts);
+      })
+      .catch(err => {
+        loadingElement.style.display = 'none';
+        errorElement.style.display = 'block';
+      });
+  }
+
+  loadProducts();
+
+  searchInput.addEventListener('input', (e) => {
+    const filteredProducts = allProducts.filter(product =>
+      product[0].toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    displayProducts(filteredProducts);
+  });
+
+  window.onload = initPage;
+</script>
 </body>
 </html>
