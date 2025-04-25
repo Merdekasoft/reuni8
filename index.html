@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reuni SMPN 8 Cimahi</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <!-- Menambahkan Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
@@ -48,111 +47,16 @@
       border-radius: 10px;
     }
 
-    .highlight-bar {
-      background-color: #ffd54f;
-      padding: 0.5rem;
-      font-weight: bold;
-      text-align: center;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .promo-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 10px;
-      padding: 0 1rem 2rem;
-    }
-
-    .promo-card {
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .promo-card a {
-      color: #fff;
-      background: #ff5722;
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
-      display: inline-block;
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      text-decoration: none;
-    }
-
-    .promo-card a:hover {
-      background: #ff5722;
-      color: #fff;
-    }
-
     @media (max-width: 480px) {
       .grid-icons {
         grid-template-columns: repeat(2, 1fr);
       }
-
-      .promo-card {
-        padding: 0.8rem;
-      }
-    }
-
-    .product-card {
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    .product-label {
-      background-color: #ff5722;
-      color: white;
-      padding: 0.4rem;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-
-    .product-card-content {
-      padding: 1rem;
-    }
-
-    .product-image {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-
-    .product-title {
-      font-size: 1rem;
-      margin-bottom: 10px;
-    }
-
-    .product-price {
-      font-size: 0.9rem;
-      color: #ff5722;
-    }
-
-    .beli-button button {
-      background-color: #ff5722;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .beli-button button:hover {
-      background-color: #e64a19;
     }
   </style>
 </head>
 <body>
 
 <div class="grid-icons">
-  <!-- Menggunakan ikon Font Awesome -->
   <div class="icon-box"><a href="https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v" target="_blank" style="text-decoration: none; color: inherit;"><i class="fab fa-whatsapp"></i> Grup WA</a></div>
   <div class="icon-box"><a href="https://forms.gle/xLwc73fXnMp8yffC6" target="_blank" style="text-decoration: none; color: inherit;"><i class="fas fa-pencil-alt"></i> Pendaftaran</a></div>
   <div class="icon-box"><a href="https://sociabuzz.com/reuni8/donate" target="_blank" style="text-decoration: none; color: inherit;"><i class="fas fa-heart"></i> Donasi</a></div>
@@ -160,70 +64,8 @@
 </div>
 
 <div class="banner">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3U1N2dvbXk1OGNvczZ0MHZ4ZDN2aW11aHRrbmR6MWR0cDFvdzE2ciZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kHhFtx1CXYCwA/giphy.gif" alt="Reuni Akbar SMPN 8 Cimahi">
+  <img src="https://i.imgur.com/nnK0aKw.jpeg" alt="Reuni Akbar SMPN 8 Cimahi">
 </div>
-
-<div class="highlight-bar">🔥 Flash Info! Daftar & Donasi Sekarang</div>
-
-<div class="promo-section" id="product-container">
-  <!-- Produk akan dimuat di sini -->
-  <div id="loading">Loading...</div>
-  <div id="error" style="display:none;">Gagal memuat produk.</div>
-  <div id="no-results" style="display:none;">Tidak ada produk yang ditemukan.</div>
-</div>
-
-<!-- Script tetap ada, tetapi bagian elemen search-bar sudah dihapus dari HTML -->
-<script>
-  const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
-  const productContainer = document.getElementById('product-container');
-  const loadingElement = document.getElementById('loading');
-  const errorElement = document.getElementById('error');
-  const noResultsElement = document.getElementById('no-results');
-  let allProducts = [];
-
-  function parseTSV(tsv) {
-    const lines = tsv.trim().split('\n');
-    return lines.map(line => line.split('\t'));
-  }
-
-  function getLabel(title) {
-    const lower = title.toLowerCase();
-    if (lower.includes('terlaris')) return 'Produk Terlaris';
-    if (lower.includes('baru')) return 'Baru';
-    return '';
-  }
-
-  function createSlug(text) {
-    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  }
-
-  function displayProducts(productData) {
-    productContainer.innerHTML = '';
-    productData.forEach(product => {
-      const title = product[0];
-      const image = product[1] || 'https://via.placeholder.com/150';
-      const priceRaw = product[2] || '';
-      const buyLink = product[3] || '#';
-      const cleanedPrice = priceRaw.replace(/[^\d]/g, '');
-      const price = cleanedPrice ? parseInt(cleanedPrice, 10) : 0;
-      const label = getLabel(title);
-
-      const productCard = document.createElement('div');
-      productCard.classList.add('product-card');
-      productCard.innerHTML = `
-        ${label ? `<div class="product-label">${label}</div>` : ''}
-        <div class="product-card-content">
-          <img src="${image}" alt="${title}" class="product-image">
-          <h3 class="product-title">${title}</h3>
-          <p class="product-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
-        </div>
-        <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
-      `;
-      productContainer.appendChild(productCard);
-    });
-    noResultsElement.style.display = productData.length === 0 ? 'block' : 'none';
-  }
-</script>
 
 </body>
 </html>
