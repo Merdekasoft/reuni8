@@ -2,155 +2,262 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Game Reuni Online</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming</title>
   <style>
-    /* Global Styles */
     body {
-      font-family: 'Arial', sans-serif;
-      background: #f7f9fc;
-      margin: 0;
-      padding: 0;
+      font-family: sans-serif;
+      margin: 10px;
+      font-size: 14px;
       color: #333;
+      background-color: #f9f9f9;
     }
-    h1 {
-      text-align: center;
-      color: #4A90E2;
-      font-size: 28px;
-      margin: 20px 0;
+    #search-bar {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      background-color: rgba(249, 249, 249, 0); /* Transparan */
+      z-index: 1000;
+      border-radius: 10px;
     }
-
-    /* Game List Container */
-    .game-list {
+    #search-input {
+      flex: 1;
+      max-width: 600px;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .game-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-
-    /* Individual Game Box */
-    .game {
-      background: #fff;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .game:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    }
-
-    /* Game Icon */
-    .game i {
-      font-size: 40px;
-      color: #4A90E2;
-      margin-bottom: 10px;
-    }
-
-    /* Game Name */
-    .game a {
-      font-size: 16px;
-      color: #333;
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-block;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
       margin-top: 10px;
-      transition: color 0.2s ease;
     }
-    .game a:hover {
-      color: #4A90E2;
+    @media (min-width: 600px) {
+      .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
     }
-
-    /* Media Queries */
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 24px;
+    .game-card, .game-detail {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #ddd;
+      padding: 8px;
+      border-radius: 6px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      background-color: #fff;
+    }
+    .game-card:hover {
+      transform: scale(1.02);
+    }
+    .game-card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .game-image {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+    .game-title {
+      font-weight: normal;
+      font-size: 13px;
+      color: #222;
+      margin: 0;
+    }
+    .game-price {
+      color: #2a7b2e;
+      font-weight: bold;
+      font-size: 14px;
+      margin: 0;
+    }
+    .beli-button {
+      margin-top: 6px;
+    }
+    #loading {
+      text-align: center;
+      font-style: italic;
+      font-size: 13px;
+    }
+    #error {
+      color: red;
+      text-align: center;
+      display: none;
+      font-size: 13px;
+    }
+    #no-results {
+      display: none;
+      text-align: center;
+      font-style: italic;
+      color: #888;
+      font-size: 13px;
+    }
+    button {
+      padding: 6px 16px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .game-label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background-color: #f0ad4e;
+      color: white;
+      padding: 2px 6px;
+      font-size: 12px;
+      border-radius: 3px;
+      font-weight: normal;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
       }
-
-      .game-list {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      }
-
-      .game i {
-        font-size: 35px;
-      }
-
-      .game a {
-        font-size: 14px;
+      to {
+        opacity: 1;
+        transform: scale(1);
       }
     }
   </style>
 </head>
 <body>
-
-<h1>🎉 Game Online untuk Reuni</h1>
-
-<div class="game-list">
-  <div class="game">
-    <i class="fas fa-paint-brush"></i>
-    <a href="https://garticphone.com" target="_blank">Gartic Phone</a>
+  <div id="search-bar">
+    <input type="text" id="search-input" placeholder="Cari produk...">
   </div>
+  <div id="loading">Memuat games...</div>
+  <div id="error">Terjadi kesalahan saat memuat data.</div>
+  <div id="no-results">Game tidak ditemukan.</div>
+  <div class="game-grid" id="game-container"></div>
 
-  <div class="game">
-    <i class="fas fa-pen-nib"></i>
-    <a href="https://skribbl.io" target="_blank">Skribbl.io</a>
-  </div>
+  <script>
+    const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
+    const gameContainer = document.getElementById('game-container');
+    const loadingElement = document.getElementById('loading');
+    const errorElement = document.getElementById('error');
+    const noResultsElement = document.getElementById('no-results');
+    const searchInput = document.getElementById('search-input');
+    let allgames = [];
 
-  <div class="game">
-    <i class="fas fa-users"></i>
-    <a href="https://backyard.co/" target="_blank">Backyard</a>
-  </div>
+    function parseTSV(tsv) {
+      const lines = tsv.trim().split('\n');
+      return lines.map(line => line.split('\t'));
+    }
 
-  <div class="game">
-    <i class="fas fa-lightbulb"></i>
-    <a href="https://kahoot.it" target="_blank">Kahoot!</a>
-  </div>
+    function getLabel(title) {
+      const lower = title.toLowerCase();
+      if (lower.includes('terlaris')) return 'Produk Terlaris';
+      if (lower.includes('baru')) return 'Baru';
+      return '';
+    }
 
-  <div class="game">
-    <i class="fas fa-question-circle"></i>
-    <a href="https://quizizz.com/join" target="_blank">Quizizz</a>
-  </div>
+    function createSlug(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
 
-  <div class="game">
-    <i class="fas fa-user-secret"></i>
-    <a href="https://codenames.game/" target="_blank">Codenames</a>
-  </div>
+    function displaygames(gameData) {
+      gameContainer.innerHTML = '';
+      gameData.forEach(game => {
+        const title = game[0];
+        const image = game[1] || 'https://via.placeholder.com/150';
+        const priceRaw = game[2] || '';
+        const buyLink = game[3] || '#';
+        const cleanedPrice = priceRaw.replace(/[^\d]/g, '');
+        const price = cleanedPrice ? parseInt(cleanedPrice, 10) : 0;
+        const label = getLabel(title);
 
-  <div class="game">
-    <i class="fas fa-gamepad"></i>
-    <a href="https://agar.io/" target="_blank">Agar.io</a>
-  </div>
+        const gameCard = document.createElement('div');
+        gameCard.classList.add('game-card');
+        gameCard.innerHTML = `
+          ${label ? `<div class="game-label">${label}</div>` : ''}
+          <div class="game-card-content">
+            <img src="${image}" alt="${title}" class="game-image">
+            <h3 class="game-title">${title}</h3>
+            <p class="game-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
+          </div>
+          <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
+        `;
+        gameContainer.appendChild(gameCard);
+      });
+      noResultsElement.style.display = gameData.length === 0 ? 'block' : 'none';
+    }
 
-  <div class="game">
-    <i class="fas fa-palette"></i>
-    <a href="https://drawbattle.io" target="_blank">Draw Battle</a>
-  </div>
+    function displaygameDetail(slug) {
+      const match = allgames.find(p => createSlug(p[0]) === slug);
+      if (!match) {
+        gameContainer.innerHTML = '<p>Game tidak ditemukan.</p>';
+        return;
+      }
+      const title = match[0];
+      const image = match[1] || 'https://via.placeholder.com/150';
+      const price = parseInt((match[2] || '').replace(/[^\d]/g, ''), 10);
+      const buyLink = match[3] || '#';
+      const html = `
+        <div class="game-detail">
+          <img src="${image}" alt="${title}" class="game-image">
+          <h2 class="game-title">${title}</h2>
+          <p class="game-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
+          <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
+          <a href="/" class="beli-button"><button>Kembali</button></a>
+        </div>
+      `;
+      gameContainer.innerHTML = html;
+    }
 
-  <div class="game">
-    <i class="fas fa-dice"></i>
-    <a href="https://www.ludo.king.com" target="_blank">Ludo King</a>
-  </div>
+    function initPage() {
+      const path = window.location.pathname;
+      const slugMatch = path.match(/^\/produk\/(.+)$/);
+      if (slugMatch) {
+        displaygameDetail(slugMatch[1]);
+      } else {
+        displaygames(allgames);
+      }
+    }
 
-  <!-- New Games -->
-  <div class="game">
-    <i class="fas fa-gamepad"></i>
-    <a href="https://www.freefiremobile.com" target="_blank">Free Fire</a>
-  </div>
+    function loadgames() {
+      fetch(tsvUrl)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.text();
+        })
+        .then(tsvText => {
+          loadingElement.style.display = 'none';
+          const data = parseTSV(tsvText);
+          allgames = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
+          initPage();
+        })
+        .catch(error => {
+          loadingElement.style.display = 'none';
+          errorElement.style.display = 'block';
+          console.error('Gagal memuat data dari TSV:', error);
+        });
+    }
 
-  <div class="game">
-    <i class="fas fa-gamepad"></i>
-    <a href="https://www.pubgmobile.com" target="_blank">PUBG Mobile</a>
-  </div>
+    searchInput.addEventListener('input', () => {
+      const keyword = searchInput.value.toLowerCase();
+      const filtered = allgames.filter(game => game[0].toLowerCase().includes(keyword));
+      displaygames(filtered);
+    });
 
-  <div class="game">
-    <i class="fas fa-gamepad"></i>
-    <a href="https://www.mobilelegends.com" target="_blank">Mobile Legends</a>
-  </div>
-
-</div>
-
+    loadgames();
+  </script>
 </body>
 </html>
