@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Game Reuni Online</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #4A90E2;
+      font-size: 28px;
+      margin: 20px 0;
+    }
+
+    /* Game List Container */
+    .game-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    /* Individual Game Box */
+    .game {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .game:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Game Icon */
+    .game i {
+      font-size: 40px;
+      color: #4A90E2;
+      margin-bottom: 10px;
+    }
+
+    /* Game Name */
+    .game a {
+      font-size: 16px;
+      color: #333;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+      transition: color 0.2s ease;
+    }
+    .game a:hover {
+      color: #4A90E2;
+    }
+
+    /* Media Queries */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .game-list {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
+
+      .game i {
+        font-size: 35px;
+      }
+
+      .game a {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎉 Game Online untuk Reuni</h1>
+
+<div class="game-list">
+  <div class="game">
+    <i class="fas fa-paint-brush"></i>
+    <a href="https://garticphone.com" target="_blank">Gartic Phone</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-pen-nib"></i>
+    <a href="https://skribbl.io" target="_blank">Skribbl.io</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-users"></i>
+    <a href="https://backyard.co/" target="_blank">Backyard</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-lightbulb"></i>
+    <a href="https://kahoot.it" target="_blank">Kahoot!</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-question-circle"></i>
+    <a href="https://quizizz.com/join" target="_blank">Quizizz</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-user-secret"></i>
+    <a href="https://codenames.game/" target="_blank">Codenames</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-gamepad"></i>
+    <a href="https://agar.io/" target="_blank">Agar.io</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-palette"></i>
+    <a href="https://drawbattle.io" target="_blank">Draw Battle</a>
+  </div>
+
+  <div class="game">
+    <i class="fas fa-dice"></i>
+    <a href="https://www.ludo.king.com" target="_blank">Ludo King</a>
+  </div>
+</div>
+
+</body>
+</html>
