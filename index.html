@@ -6,6 +6,10 @@
   <title>Reuni SMPN 8 Cimahi</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fff8f0;
@@ -24,11 +28,12 @@
     .search-bar {
       background: white;
       margin: 1rem auto;
-      max-width: 90%;
-      padding: 0.7rem;
+      max-width: 95%;
+      padding: 0.6rem 1rem;
       border-radius: 10px;
       display: flex;
       align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .search-bar input {
@@ -42,22 +47,22 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      padding: 1rem;
+      padding: 0.5rem 1rem;
       text-align: center;
     }
 
     .icon-box {
       background-color: #fff;
       border-radius: 10px;
-      padding: 0.8rem;
-      font-size: 0.9rem;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      padding: 0.8rem 0.5rem;
+      font-size: 0.8rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .banner {
       background-color: #ffe0b2;
       text-align: center;
-      padding: 1rem;
+      padding: 0.8rem;
       font-weight: bold;
       font-size: 1rem;
       margin: 1rem;
@@ -65,18 +70,17 @@
     }
 
     .promo-section {
-      margin: 1rem;
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 10px;
-      flex-wrap: wrap;
+      padding: 0 1rem 2rem;
     }
 
     .promo-card {
-      flex: 1 1 45%;
       background: white;
       padding: 1rem;
       border-radius: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       text-align: center;
     }
 
@@ -84,12 +88,31 @@
       text-decoration: none;
       color: #fff;
       background: #ff5722;
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 1rem;
       border-radius: 20px;
       display: inline-block;
       margin-top: 0.5rem;
+      font-size: 0.85rem;
     }
 
+    .highlight-bar {
+      background-color: #ffd54f;
+      padding: 0.5rem;
+      font-weight: bold;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 480px) {
+      .grid-icons {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .promo-card {
+        padding: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -101,13 +124,15 @@
 </div>
 
 <div class="grid-icons">
-  <div class="icon-box">Grup WA</div>
-  <div class="icon-box">Pendaftaran</div>
-  <div class="icon-box">Donasi</div>
-  <div class="icon-box">Jadwal Acara</div>
+  <div class="icon-box">📱 Grup WA</div>
+  <div class="icon-box">📝 Pendaftaran</div>
+  <div class="icon-box">💝 Donasi</div>
+  <div class="icon-box">🗓️ Jadwal</div>
 </div>
 
 <div class="banner">Undangan Resmi | Reuni Akbar SMPN 8 Cimahi</div>
+
+<div class="highlight-bar">🔥 Flash Info! Daftar & Donasi Sekarang</div>
 
 <div class="promo-section">
   <div class="promo-card">
