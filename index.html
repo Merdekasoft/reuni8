@@ -47,6 +47,12 @@
       border-radius: 10px;
     }
 
+    .header-banner {
+      width: 100%;
+      max-width: 100%;
+      display: block;
+    }
+
     @media (max-width: 480px) {
       .grid-icons {
         grid-template-columns: repeat(2, 1fr);
@@ -55,6 +61,8 @@
   </style>
 </head>
 <body>
+
+<img src="https://i.imgur.com/ZVfz0tJ.png" alt="Header Reuni SMPN 8 Cimahi" class="header-banner">
 
 <div class="grid-icons">
   <div class="icon-box"><a href="https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v" target="_blank" style="text-decoration: none; color: inherit;"><i class="fab fa-whatsapp"></i> Grup WA</a></div>
@@ -76,12 +84,13 @@
       rows.forEach(row => {
         const columns = row.split('\t');
         const imageUrl = columns[0]; // Gambar column
+        const link = columns[1];     // Link column
         const altText = columns[2];  // Alt column
         const urutan = parseInt(columns[8], 10);  // Urutan column (convert to number)
-        
+
         // Ensure that the row has valid data
         if (imageUrl && !isNaN(urutan)) {
-          banners.push({ imageUrl, altText, urutan });
+          banners.push({ imageUrl, link, altText, urutan });
         }
       });
 
@@ -91,13 +100,19 @@
       // Dynamically create and append image elements in the correct order
       const bannerContainer = document.getElementById('banner-container');
       banners.forEach(banner => {
+        const anchor = document.createElement('a');
+        if (banner.link) anchor.href = banner.link;
+        anchor.target = '_blank';
+
         const img = document.createElement('img');
         img.src = banner.imageUrl;
         img.alt = banner.altText;
         img.style.width = '100%';
         img.style.height = 'auto';
         img.style.borderRadius = '10px';
-        bannerContainer.appendChild(img);
+
+        anchor.appendChild(img);
+        bannerContainer.appendChild(anchor);
       });
     })
     .catch(error => console.error('Error fetching Google Sheets data:', error));
