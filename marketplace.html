@@ -19,7 +19,7 @@
       padding: 10px;
       position: sticky;
       top: 0;
-      background-color: rgba(249, 249, 249, 0); /* Transparan */
+      background-color: rgba(249, 249, 249, 0);
       z-index: 1000;
       border-radius: 10px;
     }
@@ -137,6 +137,11 @@
         transform: scale(1);
       }
     }
+    #load-more {
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -147,6 +152,7 @@
   <div id="error">Terjadi kesalahan saat memuat data.</div>
   <div id="no-results">Produk tidak ditemukan.</div>
   <div class="product-grid" id="product-container"></div>
+  <button id="load-more" style="display:none;">Muat Lebih Banyak</button>
 
   <script>
     const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
@@ -155,11 +161,23 @@
     const errorElement = document.getElementById('error');
     const noResultsElement = document.getElementById('no-results');
     const searchInput = document.getElementById('search-input');
+    const loadMoreButton = document.getElementById('load-more');
+
     let allProducts = [];
+    let displayedProducts = [];
+    const productsPerPage = 8;
+    let currentPage = 0;
 
     function parseTSV(tsv) {
       const lines = tsv.trim().split('\n');
       return lines.map(line => line.split('\t'));
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
 
     function getLabel(title) {
@@ -169,13 +187,12 @@
       return '';
     }
 
-    function createSlug(text) {
-      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    }
+    function displayProducts() {
+      const start = currentPage * productsPerPage;
+      const end = start + productsPerPage;
+      const productsToShow = displayedProducts.slice(start, end);
 
-    function displayProducts(productData) {
-      productContainer.innerHTML = '';
-      productData.forEach(product => {
+      productsToShow.forEach(product => {
         const title = product[0];
         const image = product[1] || 'https://via.placeholder.com/150';
         const priceRaw = product[2] || '';
@@ -197,39 +214,14 @@
         `;
         productContainer.appendChild(productCard);
       });
-      noResultsElement.style.display = productData.length === 0 ? 'block' : 'none';
-    }
 
-    function displayProductDetail(slug) {
-      const match = allProducts.find(p => createSlug(p[0]) === slug);
-      if (!match) {
-        productContainer.innerHTML = '<p>Produk tidak ditemukan.</p>';
-        return;
-      }
-      const title = match[0];
-      const image = match[1] || 'https://via.placeholder.com/150';
-      const price = parseInt((match[2] || '').replace(/[^\d]/g, ''), 10);
-      const buyLink = match[3] || '#';
-      const html = `
-        <div class="product-detail">
-          <img src="${image}" alt="${title}" class="product-image">
-          <h2 class="product-title">${title}</h2>
-          <p class="product-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
-          <a href="${buyLink}" target="_blank" class="beli-button"><button>Beli di WhatsApp</button></a>
-          <a href="/" class="beli-button"><button>Kembali</button></a>
-        </div>
-      `;
-      productContainer.innerHTML = html;
-    }
-
-    function initPage() {
-      const path = window.location.pathname;
-      const slugMatch = path.match(/^\/produk\/(.+)$/);
-      if (slugMatch) {
-        displayProductDetail(slugMatch[1]);
+      if ((currentPage + 1) * productsPerPage >= displayedProducts.length) {
+        loadMoreButton.style.display = 'none';
       } else {
-        displayProducts(allProducts);
+        loadMoreButton.style.display = 'block';
       }
+
+      noResultsElement.style.display = displayedProducts.length === 0 ? 'block' : 'none';
     }
 
     function loadProducts() {
@@ -242,7 +234,9 @@
           loadingElement.style.display = 'none';
           const data = parseTSV(tsvText);
           allProducts = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
-          initPage();
+          shuffleArray(allProducts);
+          displayedProducts = [...allProducts];
+          displayProducts();
         })
         .catch(error => {
           loadingElement.style.display = 'none';
@@ -253,8 +247,19 @@
 
     searchInput.addEventListener('input', () => {
       const keyword = searchInput.value.toLowerCase();
-      const filtered = allProducts.filter(product => product[0].toLowerCase().includes(keyword));
-      displayProducts(filtered);
+      productContainer.innerHTML = '';
+      currentPage = 0;
+      if (keyword) {
+        displayedProducts = allProducts.filter(product => product[0].toLowerCase().includes(keyword));
+      } else {
+        displayedProducts = [...allProducts];
+      }
+      displayProducts();
+    });
+
+    loadMoreButton.addEventListener('click', () => {
+      currentPage++;
+      displayProducts();
     });
 
     loadProducts();
