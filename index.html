@@ -126,7 +126,7 @@
 
 <script>
   // Fetch and parse the TSV data
-  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRicUXORAEGkbbu4fUy__SIWDFvLcuNMb0KAE8o12rSDsnhwDjrNOCNtzoK10MazJ-B4IEDyyZDyLrF/pub?output=tsv')
+  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRicUXORAEGkbbu4fUy__SIWDFvLcuNMb0KAE8o12rSDsnhwDjrNOCNtzoK10MazJ-B4IEDyyZDyLrF/pub?gid=0&single=true&output=tsv')
     .then(response => response.text())
     .then(data => {
       const rows = data.split('\n').slice(1);
