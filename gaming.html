@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming</title>
+  <title>Main Bareng Game Android</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       margin: 10px;
       font-size: 14px;
-      color: #333;
-      background-color: #f9f9f9;
+      color: #eee;
+      background-color: #1a1a2e;
     }
     #search-bar {
       display: flex;
@@ -19,7 +19,7 @@
       padding: 10px;
       position: sticky;
       top: 0;
-      background-color: rgba(249, 249, 249, 0); /* Transparan */
+      background-color: rgba(26, 26, 46, 0.9);
       z-index: 1000;
       border-radius: 10px;
     }
@@ -27,105 +27,92 @@
       flex: 1;
       max-width: 600px;
       padding: 8px 12px;
-      border: 1px solid #ccc;
+      border: 1px solid #444;
       border-radius: 20px;
       font-size: 14px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      background-color: #2a2a40;
+      color: #eee;
+      box-shadow: 0 0 5px #00BFFF;
     }
-    .game-grid {
+    .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin-top: 10px;
     }
     @media (min-width: 600px) {
-      .game-grid {
+      .product-grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       }
     }
-    .game-card, .game-detail {
+    .product-card, .product-detail {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border: 1px solid #ddd;
+      border: 1px solid #333;
       padding: 8px;
-      border-radius: 6px;
+      border-radius: 8px;
       text-align: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      background-color: #2a2a40;
+      color: #eee;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .game-card:hover {
-      transform: scale(1.02);
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px #00BFFF;
     }
-    .game-card-content {
+    .product-card-content {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
     }
-    .game-image {
+    .product-image {
       width: 100%;
       height: 150px;
       object-fit: contain;
       border-radius: 4px;
-      background-color: #fff;
+      background-color: #1a1a2e;
     }
-    .game-title {
-      font-weight: normal;
-      font-size: 13px;
-      color: #222;
-      margin: 0;
-    }
-    .game-price {
-      color: #2a7b2e;
+    .product-title {
       font-weight: bold;
       font-size: 14px;
+      color: #00BFFF;
       margin: 0;
+      text-shadow: 0 0 5px #00BFFF;
     }
-    .mainkan-button {
+    .beli-button {
       margin-top: 6px;
-    }
-    #loading {
-      text-align: center;
-      font-style: italic;
-      font-size: 13px;
-    }
-    #error {
-      color: red;
-      text-align: center;
-      display: none;
-      font-size: 13px;
-    }
-    #no-results {
-      display: none;
-      text-align: center;
-      font-style: italic;
-      color: #888;
-      font-size: 13px;
     }
     button {
       padding: 6px 16px;
       border: none;
-      background-color: #28a745;
-      color: white;
+      background-color: #00BFFF;
+      color: #1a1a2e;
       border-radius: 20px;
       cursor: pointer;
       font-size: 13px;
+      font-weight: bold;
+      box-shadow: 0 0 5px #00BFFF;
+      transition: background-color 0.2s;
     }
     button:hover {
-      background-color: #218838;
+      background-color: #0099cc;
     }
-    .game-label {
+    .product-label {
       position: absolute;
       top: 8px;
       left: 8px;
-      background-color: #f0ad4e;
-      color: white;
+      background-color: #FFD700;
+      color: #1a1a2e;
       padding: 2px 6px;
       font-size: 12px;
       border-radius: 3px;
-      font-weight: normal;
+      font-weight: bold;
       animation: fadeIn 0.3s ease-in-out;
+      box-shadow: 0 0 5px #FFD700;
     }
     @keyframes fadeIn {
       from {
@@ -137,102 +124,97 @@
         transform: scale(1);
       }
     }
+    #loading, #error, #no-results {
+      text-align: center;
+      font-style: italic;
+      font-size: 13px;
+      color: #ccc;
+    }
+    #load-more {
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div id="search-bar">
     <input type="text" id="search-input" placeholder="Cari game...">
   </div>
-  <div id="loading">Memuat games...</div>
+  <div id="loading">Memuat daftar game...</div>
   <div id="error">Terjadi kesalahan saat memuat data.</div>
   <div id="no-results">Game tidak ditemukan.</div>
-  <div class="game-grid" id="game-container"></div>
+  <div class="product-grid" id="product-container"></div>
+  <button id="load-more" style="display:none;">Muat Lebih Banyak</button>
 
   <script>
     const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
-    const gameContainer = document.getElementById('game-container');
+    const productContainer = document.getElementById('product-container');
     const loadingElement = document.getElementById('loading');
     const errorElement = document.getElementById('error');
     const noResultsElement = document.getElementById('no-results');
     const searchInput = document.getElementById('search-input');
-    let allgames = [];
+    const loadMoreButton = document.getElementById('load-more');
+
+    let allProducts = [];
+    let displayedProducts = [];
+    const productsPerPage = 8;
+    let currentPage = 0;
 
     function parseTSV(tsv) {
       const lines = tsv.trim().split('\n');
       return lines.map(line => line.split('\t'));
     }
 
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
     function getLabel(title) {
       const lower = title.toLowerCase();
-      if (lower.includes('terlaris')) return 'Produk Terlaris';
-      if (lower.includes('baru')) return 'Baru';
-      return '';
+      if (lower.includes('kompetitif')) return 'Kompetitif';
+      if (lower.includes('santai')) return 'Santai';
+      if (lower.includes('mabar')) return 'Mabar';
+      return 'Seru!';
     }
 
-    function createSlug(text) {
-      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    }
+    function displayProducts() {
+      const start = currentPage * productsPerPage;
+      const end = start + productsPerPage;
+      const productsToShow = displayedProducts.slice(start, end);
 
-    function displaygames(gameData) {
-      gameContainer.innerHTML = '';
-      gameData.forEach(game => {
-        const title = game[0];
-        const image = game[1] || 'https://via.placeholder.com/150';
-        const priceRaw = game[2] || '';
-        const buyLink = game[3] || '#';
-        const cleanedPrice = priceRaw.replace(/[^\d]/g, '');
-        const price = cleanedPrice ? parseInt(cleanedPrice, 10) : 0;
+      productsToShow.forEach(product => {
+        const title = product[0];
+        const image = product[1] || 'https://via.placeholder.com/150';
+        const link = product[2] || '#';
         const label = getLabel(title);
 
-        const gameCard = document.createElement('div');
-        gameCard.classList.add('game-card');
-        gameCard.innerHTML = `
-          ${label ? `<div class="game-label">${label}</div>` : ''}
-          <div class="game-card-content">
-            <img src="${image}" alt="${title}" class="game-image">
-            <h3 class="game-title">${title}</h3>
-            <p class="game-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
+        const productCard = document.createElement('div');
+        productCard.classList.add('product-card');
+        productCard.innerHTML = `
+          ${label ? `<div class="product-label">${label}</div>` : ''}
+          <div class="product-card-content">
+            <img src="${image}" alt="${title}" class="product-image">
+            <h3 class="product-title">${title}</h3>
           </div>
-          <a href="${buyLink}" target="_blank" class="mainkan-button"><button>Mainkan</button></a>
+          <a href="${link}" target="_blank" class="beli-button"><button>Gabung Main Bareng</button></a>
         `;
-        gameContainer.appendChild(gameCard);
+        productContainer.appendChild(productCard);
       });
-      noResultsElement.style.display = gameData.length === 0 ? 'block' : 'none';
-    }
 
-    function displaygameDetail(slug) {
-      const match = allgames.find(p => createSlug(p[0]) === slug);
-      if (!match) {
-        gameContainer.innerHTML = '<p>Game tidak ditemukan.</p>';
-        return;
-      }
-      const title = match[0];
-      const image = match[1] || 'https://via.placeholder.com/150';
-      const price = parseInt((match[2] || '').replace(/[^\d]/g, ''), 10);
-      const buyLink = match[3] || '#';
-      const html = `
-        <div class="game-detail">
-          <img src="${image}" alt="${title}" class="game-image">
-          <h2 class="game-title">${title}</h2>
-          <p class="game-price">${price ? 'Rp ' + price.toLocaleString('id-ID') : 'Harga tidak tersedia'}</p>
-          <a href="${buyLink}" target="_blank" class="mainkan-button"><button>Mainkan</button></a>
-          <a href="/" class="mainkan-button"><button>Kembali</button></a>
-        </div>
-      `;
-      gameContainer.innerHTML = html;
-    }
-
-    function initPage() {
-      const path = window.location.pathname;
-      const slugMatch = path.match(/^\/produk\/(.+)$/);
-      if (slugMatch) {
-        displaygameDetail(slugMatch[1]);
+      if ((currentPage + 1) * productsPerPage >= displayedProducts.length) {
+        loadMoreButton.style.display = 'none';
       } else {
-        displaygames(allgames);
+        loadMoreButton.style.display = 'block';
       }
+
+      noResultsElement.style.display = displayedProducts.length === 0 ? 'block' : 'none';
     }
 
-    function loadgames() {
+    function loadProducts() {
       fetch(tsvUrl)
         .then(response => {
           if (!response.ok) throw new Error('Network response was not ok');
@@ -241,8 +223,10 @@
         .then(tsvText => {
           loadingElement.style.display = 'none';
           const data = parseTSV(tsvText);
-          allgames = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
-          initPage();
+          allProducts = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
+          shuffleArray(allProducts);
+          displayedProducts = [...allProducts];
+          displayProducts();
         })
         .catch(error => {
           loadingElement.style.display = 'none';
@@ -253,11 +237,22 @@
 
     searchInput.addEventListener('input', () => {
       const keyword = searchInput.value.toLowerCase();
-      const filtered = allgames.filter(game => game[0].toLowerCase().includes(keyword));
-      displaygames(filtered);
+      productContainer.innerHTML = '';
+      currentPage = 0;
+      if (keyword) {
+        displayedProducts = allProducts.filter(product => product[0].toLowerCase().includes(keyword));
+      } else {
+        displayedProducts = [...allProducts];
+      }
+      displayProducts();
     });
 
-    loadgames();
+    loadMoreButton.addEventListener('click', () => {
+      currentPage++;
+      displayProducts();
+    });
+
+    loadProducts();
   </script>
 </body>
 </html>
