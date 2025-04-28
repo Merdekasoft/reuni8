@@ -200,11 +200,13 @@ function drag(event) {
     event.preventDefault();
     const pos = event.touches ? getMousePos(event.touches[0]) : getMousePos(event);
 
+    // Menggambar ulang potongan gambar
     drawPieces();
 
     const scaleX = canvas.width / img.width;
     const scaleY = canvas.height / img.height;
 
+    // Menggambar potongan gambar yang sedang di-drag di posisi mouse/touch
     ctx.drawImage(
       img,
       draggingPiece.correctX * pieceWidth,
@@ -229,8 +231,31 @@ function drop(event) {
     const scaleX = canvas.width / img.width;
     const scaleY = canvas.height / img.height;
 
-    draggingPiece.currentX = Math.floor(pos.x / (pieceWidth * scaleX));
-    draggingPiece.currentY = Math.floor(pos.y / (pieceHeight * scaleY));
+    // Hitung posisi baru berdasarkan posisi mouse/touch
+    const newX = Math.floor(pos.x / (pieceWidth * scaleX));
+    const newY = Math.floor(pos.y / (pieceHeight * scaleY));
+
+    // Mencari potongan yang bertumpuk dan menukar posisi
+    for (let piece of pieces) {
+      if (
+        piece !== draggingPiece &&
+        piece.currentX === newX &&
+        piece.currentY === newY
+      ) {
+        // Tukar posisi potongan gambar
+        let tempX = draggingPiece.currentX;
+        let tempY = draggingPiece.currentY;
+        draggingPiece.currentX = piece.currentX;
+        draggingPiece.currentY = piece.currentY;
+        piece.currentX = tempX;
+        piece.currentY = tempY;
+        break;
+      }
+    }
+
+    // Update posisi gambar yang sedang dipindahkan
+    draggingPiece.currentX = newX;
+    draggingPiece.currentY = newY;
 
     draggingPiece = null;
     canvas.style.cursor = 'grab';
@@ -239,6 +264,7 @@ function drop(event) {
   }
 }
 
+// Mengecek apakah puzzle sudah selesai
 function checkWin() {
   let correct = true;
   for (let piece of pieces) {
