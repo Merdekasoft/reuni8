@@ -44,7 +44,7 @@
     /* Grid Layout */
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr); /* Menjadikan 2 kolom */
+      grid-template-columns: repeat(2, 1fr); /* 2 kolom untuk layar besar */
       gap: 20px;
       padding: 0 20px;
       margin-top: 20px;
@@ -103,46 +103,11 @@
       background-color: #218838;
     }
 
-    /* Responsive Design */
+    /* Responsive Design - 1 Kolom untuk Smartphone */
     @media (max-width: 768px) {
-      #search-input {
-        max-width: 500px;
-      }
-
       .product-grid {
-        grid-template-columns: 1fr; /* Menjadi 1 kolom pada layar kecil */
+        grid-template-columns: 1fr; /* 1 kolom untuk layar kecil */
       }
-    }
-
-    /* Loading, Error, and No Results */
-    #loading, #error, #no-results {
-      text-align: center;
-      font-style: italic;
-      font-size: 16px;
-      color: #555;
-    }
-    #loading {
-      display: block;
-    }
-    #error, #no-results {
-      display: none;
-    }
-
-    /* Load More Button */
-    #load-more {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-    }
-    #load-more:hover {
-      background-color: #0056b3;
     }
 
     /* Label */
@@ -170,7 +135,7 @@
   <div id="no-results">Produk tidak ditemukan.</div>
   
   <div class="product-grid" id="product-container"></div>
-  
+
   <button id="load-more" style="display:none;">Muat Lebih Banyak</button>
 
   <script>
