@@ -48,6 +48,13 @@
     button:hover {
       background-color: #6e4b47;
     }
+    #successMessage {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #4B3832;
+      font-weight: bold;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -55,6 +62,7 @@
 <h1>Puzzle Reuni Sekolah</h1>
 <canvas id="puzzleCanvas"></canvas>
 <button onclick="shuffle()">Acak Lagi</button>
+<div id="successMessage">Selamat! Kamu berhasil menyusun foto masa sekolah! 🎉</div>
 
 <script>
 // Ganti link dengan link CSV Anda
@@ -69,6 +77,7 @@ let draggingOffsetY = 0;
 let canvas = document.getElementById('puzzleCanvas');
 let ctx = canvas.getContext('2d');
 let img = new Image();
+let successMessage = document.getElementById('successMessage');
 
 // Mengambil URL gambar acak dari CSV
 function getRandomImageUrl() {
@@ -274,7 +283,7 @@ function checkWin() {
     }
   }
   if (correct) {
-    setTimeout(() => alert('Selamat! Kamu berhasil menyusun foto masa sekolah! 🎉'), 200);
+    successMessage.style.display = 'block';  // Menampilkan pesan sukses
   }
 }
 
