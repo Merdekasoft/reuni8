@@ -3,247 +3,235 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Main Bareng Game Android</title>
+  <title>Puzzle Reuni Sekolah</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 10px;
-      font-size: 14px;
-      color: #eee;
-      background-color: #1a1a2e;
-    }
-    #search-bar {
-      display: flex;
-      justify-content: center;
-      margin: 10px 0;
-      padding: 10px;
-      position: sticky;
-      top: 0;
-      background-color: rgba(26, 26, 46, 0.9);
-      z-index: 1000;
-      border-radius: 10px;
-    }
-    #search-input {
-      flex: 1;
-      max-width: 600px;
-      padding: 8px 12px;
-      border: 1px solid #444;
-      border-radius: 20px;
-      font-size: 14px;
-      background-color: #2a2a40;
-      color: #eee;
-      box-shadow: 0 0 5px #00BFFF;
-    }
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-    @media (min-width: 600px) {
-      .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      }
-    }
-    .product-card, .product-detail {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1px solid #333;
-      padding: 8px;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-      background-color: #2a2a40;
-      color: #eee;
-      position: relative;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .product-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px #00BFFF;
-    }
-    .product-card-content {
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #f6d365, #fda085);
+      font-family: 'Poppins', sans-serif;
     }
-    .product-image {
-      width: 100%;
-      height: 150px;
-      object-fit: contain;
-      border-radius: 4px;
-      background-color: #1a1a2e;
+    h1 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #4B3832;
+      text-shadow: 1px 1px 2px #fff;
     }
-    .product-title {
-      font-weight: bold;
-      font-size: 14px;
-      color: #00BFFF;
-      margin: 0;
-      text-shadow: 0 0 5px #00BFFF;
-    }
-    .beli-button {
-      margin-top: 6px;
+    canvas {
+      border: 4px solid #4B3832;
+      border-radius: 16px;
+      background: #fff;
+      max-width: 95%;
+      height: auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      touch-action: none;
     }
     button {
-      padding: 6px 16px;
+      margin-top: 20px;
+      padding: 14px 28px;
+      font-size: 18px;
       border: none;
-      background-color: #00BFFF;
-      color: #1a1a2e;
-      border-radius: 20px;
+      border-radius: 8px;
+      background-color: #4B3832;
+      color: #fff;
       cursor: pointer;
-      font-size: 13px;
-      font-weight: bold;
-      box-shadow: 0 0 5px #00BFFF;
-      transition: background-color 0.2s;
+      transition: background 0.3s;
     }
     button:hover {
-      background-color: #0099cc;
-    }
-    .product-label {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background-color: #FFD700;
-      color: #1a1a2e;
-      padding: 2px 6px;
-      font-size: 12px;
-      border-radius: 3px;
-      font-weight: bold;
-      animation: fadeIn 0.3s ease-in-out;
-      box-shadow: 0 0 5px #FFD700;
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    #no-results {
-      text-align: center;
-      font-style: italic;
-      font-size: 13px;
-      color: #ccc;
-      display: none; /* initially hidden */
-    }
-    #load-more {
-      display: block;
-      margin: 20px auto;
-      text-align: center;
+      background-color: #6e4b47;
     }
   </style>
 </head>
 <body>
-  <div id="search-bar">
-    <input type="text" id="search-input" placeholder="Cari game...">
-  </div>
-  <div id="no-results">Game tidak ditemukan.</div>
-  <div class="product-grid" id="product-container"></div>
-  <button id="load-more" style="display:none;">Muat Lebih Banyak</button>
 
-  <script>
-    const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQQq4xuaq3yaS1FQjN94GJmz7p5AoPnA4BLDtHdQAe8MvDznTaO664e3zTM9J8xNqwX_h456woU58a/pub?output=tsv';
-    const productContainer = document.getElementById('product-container');
-    const noResultsElement = document.getElementById('no-results');
-    const searchInput = document.getElementById('search-input');
-    const loadMoreButton = document.getElementById('load-more');
+<h1>Puzzle Reuni Sekolah</h1>
+<canvas id="puzzleCanvas"></canvas>
+<button onclick="shuffle()">Acak Lagi</button>
 
-    let allProducts = [];
-    let displayedProducts = [];
-    const productsPerPage = 8;
-    let currentPage = 0;
+<script>
+const imageLink = 'https://i.imgur.com/jvBtRvu.png'; // Ganti ke link foto sekolahmu
+const rows = 3;
+const cols = 3;
+let pieces = [];
+let pieceWidth, pieceHeight;
+let draggingPiece = null;
+let draggingOffsetX = 0;
+let draggingOffsetY = 0;
+let canvas = document.getElementById('puzzleCanvas');
+let ctx = canvas.getContext('2d');
+let img = new Image();
 
-    function parseTSV(tsv) {
-      const lines = tsv.trim().split('\n');
-      return lines.map(line => line.split('\t'));
-    }
+img.src = imageLink;
+img.onload = function() {
+  resizeCanvas();
+  pieceWidth = img.width / cols;
+  pieceHeight = img.height / rows;
+  initPieces();
+  shuffle();
+};
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
+window.addEventListener('resize', resizeCanvas);
 
-    function getLabel(title) {
-      const lower = title.toLowerCase();
-      if (lower.includes('kompetitif')) return 'Kompetitif';
-      if (lower.includes('santai')) return 'Santai';
-      if (lower.includes('mabar')) return 'Mabar';
-      return 'Seru!';
-    }
+function resizeCanvas() {
+  const maxWidth = window.innerWidth * 0.95;
+  const ratio = img.width / img.height;
+  canvas.width = Math.min(maxWidth, img.width);
+  canvas.height = canvas.width / ratio;
+}
 
-    function displayProducts() {
-      const start = currentPage * productsPerPage;
-      const end = start + productsPerPage;
-      const productsToShow = displayedProducts.slice(start, end);
-
-      productsToShow.forEach(product => {
-        const title = product[0];
-        const image = product[1] || 'https://via.placeholder.com/150';
-        const link = product[2] || '#';
-        const label = getLabel(title);
-
-        const productCard = document.createElement('div');
-        productCard.classList.add('product-card');
-        productCard.innerHTML = `
-          ${label ? `<div class="product-label">${label}</div>` : ''}
-          <div class="product-card-content">
-            <img src="${image}" alt="${title}" class="product-image">
-            <h3 class="product-title">${title}</h3>
-          </div>
-          <a href="${link}" target="_blank" class="beli-button"><button>Gabung Main Bareng</button></a>
-        `;
-        productContainer.appendChild(productCard);
+function initPieces() {
+  pieces = [];
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      pieces.push({
+        correctX: x,
+        correctY: y,
+        currentX: x,
+        currentY: y
       });
-
-      if ((currentPage + 1) * productsPerPage >= displayedProducts.length) {
-        loadMoreButton.style.display = 'none';
-      } else {
-        loadMoreButton.style.display = 'block';
-      }
-
-      noResultsElement.style.display = displayedProducts.length === 0 ? 'block' : 'none';
     }
+  }
+}
 
-    function loadProducts() {
-      fetch(tsvUrl)
-        .then(response => response.text())
-        .then(tsvText => {
-          const data = parseTSV(tsvText);
-          allProducts = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
-          shuffleArray(allProducts);
-          displayedProducts = [...allProducts];
-          displayProducts();
-        })
-        .catch(error => {
-          console.error('Gagal memuat data dari TSV:', error);
-        });
+function shuffle() {
+  let positions = [];
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      positions.push({ x, y });
     }
+  }
 
-    searchInput.addEventListener('input', () => {
-      const keyword = searchInput.value.toLowerCase();
-      productContainer.innerHTML = '';
-      currentPage = 0;
-      if (keyword) {
-        displayedProducts = allProducts.filter(product => product[0].toLowerCase().includes(keyword));
-      } else {
-        displayedProducts = [...allProducts];
-      }
-      displayProducts();
-    });
+  pieces.forEach(piece => {
+    const randomIndex = Math.floor(Math.random() * positions.length);
+    const pos = positions.splice(randomIndex, 1)[0];
+    piece.currentX = pos.x;
+    piece.currentY = pos.y;
+  });
+  drawPieces();
+}
 
-    loadMoreButton.addEventListener('click', () => {
-      currentPage++;
-      displayProducts();
-    });
+function drawPieces() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const scaleX = canvas.width / img.width;
+  const scaleY = canvas.height / img.height;
 
-    loadProducts();
-  </script>
+  pieces.forEach(piece => {
+    ctx.drawImage(
+      img,
+      piece.correctX * pieceWidth,
+      piece.correctY * pieceHeight,
+      pieceWidth,
+      pieceHeight,
+      piece.currentX * pieceWidth * scaleX,
+      piece.currentY * pieceHeight * scaleY,
+      pieceWidth * scaleX,
+      pieceHeight * scaleY
+    );
+  });
+}
+
+function getMousePos(evt) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+    y: (evt.clientY - rect.top) * (canvas.height / rect.height)
+  };
+}
+
+canvas.addEventListener('mousedown', startDrag);
+canvas.addEventListener('touchstart', startDrag, { passive: false });
+
+function startDrag(event) {
+  event.preventDefault();
+  const pos = event.touches ? getMousePos(event.touches[0]) : getMousePos(event);
+
+  const scaleX = canvas.width / img.width;
+  const scaleY = canvas.height / img.height;
+
+  for (let piece of pieces) {
+    if (
+      pos.x >= piece.currentX * pieceWidth * scaleX &&
+      pos.x < (piece.currentX + 1) * pieceWidth * scaleX &&
+      pos.y >= piece.currentY * pieceHeight * scaleY &&
+      pos.y < (piece.currentY + 1) * pieceHeight * scaleY
+    ) {
+      draggingPiece = piece;
+      draggingOffsetX = pos.x - piece.currentX * pieceWidth * scaleX;
+      draggingOffsetY = pos.y - piece.currentY * pieceHeight * scaleY;
+      canvas.style.cursor = 'grabbing';
+      break;
+    }
+  }
+}
+
+canvas.addEventListener('mousemove', drag);
+canvas.addEventListener('touchmove', drag, { passive: false });
+
+function drag(event) {
+  if (draggingPiece) {
+    event.preventDefault();
+    const pos = event.touches ? getMousePos(event.touches[0]) : getMousePos(event);
+
+    drawPieces();
+
+    const scaleX = canvas.width / img.width;
+    const scaleY = canvas.height / img.height;
+
+    ctx.drawImage(
+      img,
+      draggingPiece.correctX * pieceWidth,
+      draggingPiece.correctY * pieceHeight,
+      pieceWidth,
+      pieceHeight,
+      pos.x - draggingOffsetX,
+      pos.y - draggingOffsetY,
+      pieceWidth * scaleX,
+      pieceHeight * scaleY
+    );
+  }
+}
+
+canvas.addEventListener('mouseup', drop);
+canvas.addEventListener('touchend', drop);
+
+function drop(event) {
+  if (draggingPiece) {
+    const pos = event.changedTouches ? getMousePos(event.changedTouches[0]) : getMousePos(event);
+
+    const scaleX = canvas.width / img.width;
+    const scaleY = canvas.height / img.height;
+
+    draggingPiece.currentX = Math.floor(pos.x / (pieceWidth * scaleX));
+    draggingPiece.currentY = Math.floor(pos.y / (pieceHeight * scaleY));
+
+    draggingPiece = null;
+    canvas.style.cursor = 'grab';
+    drawPieces();
+    checkWin();
+  }
+}
+
+function checkWin() {
+  let correct = true;
+  for (let piece of pieces) {
+    if (piece.currentX !== piece.correctX || piece.currentY !== piece.correctY) {
+      correct = false;
+      break;
+    }
+  }
+  if (correct) {
+    setTimeout(() => alert('Selamat! Kamu berhasil menyusun foto masa sekolah! 🎉'), 200);
+  }
+}
+</script>
+
 </body>
 </html>
