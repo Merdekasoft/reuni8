@@ -124,7 +124,7 @@
         transform: scale(1);
       }
     }
-    #loading, #error, #no-results {
+    #no-results {
       text-align: center;
       font-style: italic;
       font-size: 13px;
@@ -141,17 +141,13 @@
   <div id="search-bar">
     <input type="text" id="search-input" placeholder="Cari game...">
   </div>
-  <div id="loading">Memuat daftar game...</div>
-  <div id="error">Terjadi kesalahan saat memuat data.</div>
   <div id="no-results">Game tidak ditemukan.</div>
   <div class="product-grid" id="product-container"></div>
   <button id="load-more" style="display:none;">Muat Lebih Banyak</button>
 
   <script>
-    const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQQq4xuaq3yaS1FQjN94GJmz7p5AoPnA4BLDtHdQAe8MvDznTaO664e3zTM9J8xNqwX_h456woU58a/pub?gid=0&single=true&output=tsv';
+    const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
     const productContainer = document.getElementById('product-container');
-    const loadingElement = document.getElementById('loading');
-    const errorElement = document.getElementById('error');
     const noResultsElement = document.getElementById('no-results');
     const searchInput = document.getElementById('search-input');
     const loadMoreButton = document.getElementById('load-more');
@@ -216,12 +212,8 @@
 
     function loadProducts() {
       fetch(tsvUrl)
-        .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.text();
-        })
+        .then(response => response.text())
         .then(tsvText => {
-          loadingElement.style.display = 'none';
           const data = parseTSV(tsvText);
           allProducts = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
           shuffleArray(allProducts);
@@ -229,8 +221,6 @@
           displayProducts();
         })
         .catch(error => {
-          loadingElement.style.display = 'none';
-          errorElement.style.display = 'block';
           console.error('Gagal memuat data dari TSV:', error);
         });
     }
