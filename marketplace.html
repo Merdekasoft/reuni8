@@ -12,33 +12,26 @@
       font-size: 14px;
       color: #333;
       background-color: #f4f4f4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
-      overflow: hidden;
     }
 
-    /* Header - Compact search bar */
+    /* Header */
     #search-bar {
       display: flex;
       justify-content: center;
-      margin: 10px 0; /* Mengurangi margin agar lebih rapat */
-      padding: 5px; /* Mengurangi padding untuk tampilan yang lebih compact */
+      margin: 0; /* Menghilangkan margin atas dan bawah */
+      padding: 5px; /* Padding tetap compact */
       position: sticky;
       top: 0;
       background-color: #fff;
-      z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      width: 100%;
+      z-index: 1000; /* Agar tetap di atas konten lain */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Memberikan bayangan ringan */
     }
     #search-input {
       flex: 1;
-      max-width: 800px;
-      padding: 8px 15px; /* Mengurangi padding untuk tampilan lebih kompak */
+      max-width: 600px; /* Mengurangi lebar maksimal */
+      padding: 8px 12px; /* Mengurangi padding agar lebih ramping */
       border: 2px solid #ddd;
-      border-radius: 25px;
+      border-radius: 20px; /* Membuat border lebih bulat */
       font-size: 14px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
@@ -55,9 +48,6 @@
       gap: 20px;
       padding: 0 20px;
       margin-top: 20px;
-      width: 100%;
-      flex-grow: 1;
-      overflow-y: auto;
     }
     .product-card {
       background-color: #fff;
@@ -65,8 +55,6 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       overflow: hidden;
       transition: all 0.3s ease;
-      position: relative;
-      min-height: 350px; /* Menambahkan tinggi minimum agar produk tidak terlalu pendek */
     }
     .product-card:hover {
       transform: translateY(-5px);
@@ -79,7 +67,7 @@
 
     .product-image {
       width: 100%;
-      height: 250px;
+      height: 200px;
       object-fit: cover;
       border-radius: 10px;
       transition: transform 0.3s ease;
@@ -101,58 +89,46 @@
       margin-bottom: 10px;
     }
     .beli-button {
-      margin-top: 15px;
+      margin-top: 10px;
       display: inline-block;
       background-color: #28a745;
       color: #fff;
-      padding: 12px 20px;
+      padding: 10px 20px;
       border-radius: 25px;
-      font-size: 16px;
+      font-size: 14px;
       text-decoration: none;
       transition: background-color 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     .beli-button:hover {
       background-color: #218838;
     }
 
-    /* Loading Spinner */
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      #search-input {
+        max-width: 500px;
+      }
+    }
+
+    /* Loading, Error, and No Results */
+    #loading, #error, #no-results {
+      text-align: center;
+      font-style: italic;
+      font-size: 16px;
+      color: #555;
+    }
     #loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      display: block;
+    }
+    #error, #no-results {
       display: none;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 10000;
-    }
-
-    #loading .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #28a745;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1.5s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
     }
 
     /* Load More Button */
     #load-more {
       display: block;
       margin: 20px auto;
-      padding: 12px 25px;
+      padding: 10px 20px;
       background-color: #007bff;
       color: white;
       border: none;
@@ -160,7 +136,6 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     #load-more:hover {
       background-color: #0056b3;
@@ -186,11 +161,9 @@
     <input type="text" id="search-input" placeholder="Cari produk...">
   </div>
 
-  <div id="loading">
-    <div class="spinner"></div>
-  </div>
-  <div id="error" style="display: none;">Terjadi kesalahan saat memuat data.</div>
-  <div id="no-results" style="display: none;">Produk tidak ditemukan.</div>
+  <div id="loading">Memuat produk...</div>
+  <div id="error">Terjadi kesalahan saat memuat data.</div>
+  <div id="no-results">Produk tidak ditemukan.</div>
   
   <div class="product-grid" id="product-container"></div>
   
@@ -257,7 +230,6 @@
         productContainer.appendChild(productCard);
       });
 
-      // Periksa apakah masih ada produk untuk dimuat
       if ((currentPage + 1) * productsPerPage >= displayedProducts.length) {
         loadMoreButton.style.display = 'none';
       } else {
@@ -268,14 +240,13 @@
     }
 
     function loadProducts() {
-      loadingElement.style.display = 'flex'; // Menampilkan spinner di tengah halaman
       fetch(tsvUrl)
         .then(response => {
           if (!response.ok) throw new Error('Network response was not ok');
           return response.text();
         })
         .then(tsvText => {
-          loadingElement.style.display = 'none'; // Menyembunyikan spinner
+          loadingElement.style.display = 'none';
           const data = parseTSV(tsvText);
           allProducts = [...new Map(data.slice(1).map(p => [p[0], p])).values()];
           shuffleArray(allProducts);
@@ -283,7 +254,7 @@
           displayProducts();
         })
         .catch(error => {
-          loadingElement.style.display = 'none'; // Menyembunyikan spinner
+          loadingElement.style.display = 'none';
           errorElement.style.display = 'block';
           console.error('Gagal memuat data dari TSV:', error);
         });
@@ -291,9 +262,13 @@
 
     searchInput.addEventListener('input', () => {
       const keyword = searchInput.value.toLowerCase();
-      displayedProducts = allProducts.filter(product => product[0].toLowerCase().includes(keyword));
-      currentPage = 0;
       productContainer.innerHTML = '';
+      currentPage = 0;
+      if (keyword) {
+        displayedProducts = allProducts.filter(product => product[0].toLowerCase().includes(keyword));
+      } else {
+        displayedProducts = [...allProducts];
+      }
       displayProducts();
     });
 
@@ -302,7 +277,7 @@
       displayProducts();
     });
 
-    loadProducts(); // Memulai pemuatan produk saat halaman dimuat
+    loadProducts();
   </script>
 </body>
 </html>
