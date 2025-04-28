@@ -44,7 +44,7 @@
     /* Grid Layout */
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(2, 1fr); /* Menjadikan 2 kolom */
       gap: 20px;
       padding: 0 20px;
       margin-top: 20px;
@@ -107,6 +107,10 @@
     @media (max-width: 768px) {
       #search-input {
         max-width: 500px;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr; /* Menjadi 1 kolom pada layar kecil */
       }
     }
 
