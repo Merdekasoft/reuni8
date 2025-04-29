@@ -1,298 +1,177 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Puzzle Reuni Sekolah</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roda Door Prize</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      background: linear-gradient(to bottom right, #fdfbfb, #ebedee);
       margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #f6d365, #fda085);
-      font-family: 'Poppins', sans-serif;
+      padding: 20px;
     }
+
     h1 {
-      margin-bottom: 20px;
-      font-size: 26px;
-      color: #4B3832;
-      text-shadow: 1px 1px 2px #fff;
+      font-size: 6vw;
+      color: #2c3e50;
     }
+
+    .wheel-wrapper {
+      position: relative;
+      margin: 40px auto;
+      width: 80vw;
+      max-width: 400px;
+    }
+
     canvas {
-      border: 4px solid #4B3832;
-      border-radius: 16px;
-      background: #fff;
-      max-width: 95%;
+      width: 100%;
       height: auto;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      touch-action: none;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
+
+    .pointer {
+      position: absolute;
+      bottom: -40px; /* Move the pointer to the bottom */
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg); /* Rotate 180 degrees */
+      width: 0;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-top: 40px solid red; /* Change border to top */
+      z-index: 2;
+    }
+
     button {
       margin-top: 20px;
-      padding: 14px 28px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      background-color: #4B3832;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #6e4b47;
-    }
-    #successMessage {
-      margin-top: 20px;
-      font-size: 24px;
-      color: #4B3832;
+      padding: 14px 30px;
+      font-size: 1.2rem;
       font-weight: bold;
-      display: none;
+      border: none;
+      background: #27ae60;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #219150;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.4rem;
+      color: #34495e;
+      font-weight: bold;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 8vw;
+      }
+      button {
+        font-size: 5vw;
+        padding: 10px 20px;
+      }
+      #result {
+        font-size: 5vw;
+      }
     }
   </style>
 </head>
 <body>
+  <h1>🎁 Roda Door Prize Reuni 🎁</h1>
+  <div class="wheel-wrapper">
+    <div class="pointer"></div>
+    <canvas id="wheel"></canvas>
+  </div>
+  <button onclick="spin()">Putar Roda</button>
+  <div id="result"></div>
 
-<h1>Puzzle Reuni Sekolah</h1>
-<canvas id="puzzleCanvas"></canvas>
-<button onclick="shuffle()">Acak Lagi</button>
-<div id="successMessage">Selamat! Kamu berhasil menyusun foto masa sekolah! 🎉</div>
+  <script>
+    const hadiah = [
+      "📺 TV LED", "❄️ Kulkas", "🚲 Sepeda", "🎧 Headset",
+      "🍿 Popcorn Maker", "🎉 Bonus Doorprize", "😅 Coba Lagi", "🪙 Uang Tunai"
+    ];
 
-<script>
-// Ganti link dengan link CSV Anda
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRxn5xeQpm8mFB_OFQRH8UX6WjMbUPT30wXNAVETar1ZDFo1iuJL7Mn-NA3zPrpfXz_Vrv6ZITlnId8/pub?output=csv';
-const rows = 4;
-const cols = 4;
-let pieces = [];
-let pieceWidth, pieceHeight;
-let draggingPiece = null;
-let draggingOffsetX = 0;
-let draggingOffsetY = 0;
-let canvas = document.getElementById('puzzleCanvas');
-let ctx = canvas.getContext('2d');
-let img = new Image();
-let successMessage = document.getElementById('successMessage');
+    const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#FF8F33", "#33FFF3", "#F333FF", "#A8FF33"];
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
+    const result = document.getElementById("result");
+    let isSpinning = false;
+    let currentRotation = 0;
 
-// Mengambil URL gambar acak dari CSV
-function getRandomImageUrl() {
-  return fetch(csvUrl)
-    .then(response => response.text())
-    .then(data => {
-      const rows = data.split('\n');
-      const imageUrls = rows.map(row => row.split(',')[0]).filter(url => url); // Asumsikan CSV hanya punya satu kolom dengan URL
-      const randomUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
-      return randomUrl;
-    });
-}
-
-// Inisialisasi puzzle
-function initPuzzle(imageLink) {
-  img.src = imageLink;
-  img.onload = function() {
-    resizeCanvas();
-    pieceWidth = img.width / cols;
-    pieceHeight = img.height / rows;
-    initPieces();
-    shuffle();
-  };
-}
-
-// Menyesuaikan ukuran canvas
-function resizeCanvas() {
-  const maxWidth = window.innerWidth * 0.95;
-  const ratio = img.width / img.height;
-  canvas.width = Math.min(maxWidth, img.width);
-  canvas.height = canvas.width / ratio;
-}
-
-// Menginisialisasi potongan gambar
-function initPieces() {
-  pieces = [];
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      pieces.push({
-        correctX: x,
-        correctY: y,
-        currentX: x,
-        currentY: y
-      });
+    function resizeCanvas() {
+      const size = canvas.clientWidth;
+      canvas.width = size;
+      canvas.height = size;
     }
-  }
-}
 
-// Mengacak posisi potongan gambar
-function shuffle() {
-  let positions = [];
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      positions.push({ x, y });
-    }
-  }
+    function drawWheel(angleOffset = 0) {
+      resizeCanvas();
+      const center = canvas.width / 2;
+      const radius = center;
+      const arc = 2 * Math.PI / hadiah.length;
 
-  pieces.forEach(piece => {
-    const randomIndex = Math.floor(Math.random() * positions.length);
-    const pos = positions.splice(randomIndex, 1)[0];
-    piece.currentX = pos.x;
-    piece.currentY = pos.y;
-  });
-  drawPieces();
-}
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// Menggambar potongan gambar
-function drawPieces() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const scaleX = canvas.width / img.width;
-  const scaleY = canvas.height / img.height;
+      for (let i = 0; i < hadiah.length; i++) {
+        const startAngle = i * arc + angleOffset;
+        ctx.beginPath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, startAngle, startAngle + arc, false);
+        ctx.lineTo(center, center);
+        ctx.fill();
 
-  pieces.forEach(piece => {
-    ctx.drawImage(
-      img,
-      piece.correctX * pieceWidth,
-      piece.correctY * pieceHeight,
-      pieceWidth,
-      pieceHeight,
-      piece.currentX * pieceWidth * scaleX,
-      piece.currentY * pieceHeight * scaleY,
-      pieceWidth * scaleX,
-      pieceHeight * scaleY
-    );
-  });
-}
-
-// Mendapatkan posisi mouse/touch
-function getMousePos(evt) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: (evt.clientX - rect.left) * (canvas.width / rect.width),
-    y: (evt.clientY - rect.top) * (canvas.height / rect.height)
-  };
-}
-
-// Event listener untuk drag gambar
-canvas.addEventListener('mousedown', startDrag);
-canvas.addEventListener('touchstart', startDrag, { passive: false });
-
-function startDrag(event) {
-  event.preventDefault();
-  const pos = event.touches ? getMousePos(event.touches[0]) : getMousePos(event);
-
-  const scaleX = canvas.width / img.width;
-  const scaleY = canvas.height / img.height;
-
-  for (let piece of pieces) {
-    if (
-      pos.x >= piece.currentX * pieceWidth * scaleX &&
-      pos.x < (piece.currentX + 1) * pieceWidth * scaleX &&
-      pos.y >= piece.currentY * pieceHeight * scaleY &&
-      pos.y < (piece.currentY + 1) * pieceHeight * scaleY
-    ) {
-      draggingPiece = piece;
-      draggingOffsetX = pos.x - piece.currentX * pieceWidth * scaleX;
-      draggingOffsetY = pos.y - piece.currentY * pieceHeight * scaleY;
-      canvas.style.cursor = 'grabbing';
-      break;
-    }
-  }
-}
-
-canvas.addEventListener('mousemove', drag);
-canvas.addEventListener('touchmove', drag, { passive: false });
-
-function drag(event) {
-  if (draggingPiece) {
-    event.preventDefault();
-    const pos = event.touches ? getMousePos(event.touches[0]) : getMousePos(event);
-
-    // Menggambar ulang potongan gambar
-    drawPieces();
-
-    const scaleX = canvas.width / img.width;
-    const scaleY = canvas.height / img.height;
-
-    // Menggambar potongan gambar yang sedang di-drag di posisi mouse/touch
-    ctx.drawImage(
-      img,
-      draggingPiece.correctX * pieceWidth,
-      draggingPiece.correctY * pieceHeight,
-      pieceWidth,
-      pieceHeight,
-      pos.x - draggingOffsetX,
-      pos.y - draggingOffsetY,
-      pieceWidth * scaleX,
-      pieceHeight * scaleY
-    );
-  }
-}
-
-canvas.addEventListener('mouseup', drop);
-canvas.addEventListener('touchend', drop);
-
-function drop(event) {
-  if (draggingPiece) {
-    const pos = event.changedTouches ? getMousePos(event.changedTouches[0]) : getMousePos(event);
-
-    const scaleX = canvas.width / img.width;
-    const scaleY = canvas.height / img.height;
-
-    // Hitung posisi baru berdasarkan posisi mouse/touch
-    const newX = Math.floor(pos.x / (pieceWidth * scaleX));
-    const newY = Math.floor(pos.y / (pieceHeight * scaleY));
-
-    // Mencari potongan yang bertumpuk dan menukar posisi
-    for (let piece of pieces) {
-      if (
-        piece !== draggingPiece &&
-        piece.currentX === newX &&
-        piece.currentY === newY
-      ) {
-        // Tukar posisi potongan gambar
-        let tempX = draggingPiece.currentX;
-        let tempY = draggingPiece.currentY;
-        draggingPiece.currentX = piece.currentX;
-        draggingPiece.currentY = piece.currentY;
-        piece.currentX = tempX;
-        piece.currentY = tempY;
-        break;
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(startAngle + arc / 2);
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#000";
+        ctx.font = `${Math.floor(radius * 0.08)}px sans-serif`;
+        ctx.fillText(hadiah[i], radius * 0.65, 0);
+        ctx.restore();
       }
     }
 
-    // Update posisi gambar yang sedang dipindahkan
-    draggingPiece.currentX = newX;
-    draggingPiece.currentY = newY;
+    drawWheel();
+    window.addEventListener('resize', () => drawWheel(currentRotation));
 
-    draggingPiece = null;
-    canvas.style.cursor = 'grab';
-    drawPieces();
-    checkWin();
-  }
-}
+    function spin() {
+      if (isSpinning) return;
+      isSpinning = true;
+      const rotation = 3600 + Math.random() * 720;
+      const duration = 5000;
+      const arc = 360 / hadiah.length;
+      let start = null;
 
-// Mengecek apakah puzzle sudah selesai
-function checkWin() {
-  let correct = true;
-  for (let piece of pieces) {
-    if (piece.currentX !== piece.correctX || piece.currentY !== piece.correctY) {
-      correct = false;
-      break;
+      function animate(timestamp) {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        const ease = 1 - Math.pow(1 - progress / duration, 3);
+        currentRotation = ease * rotation;
+        drawWheel(currentRotation * Math.PI / 180);
+
+        if (progress < duration) {
+          requestAnimationFrame(animate);
+        } else {
+          isSpinning = false;
+          const finalAngle = currentRotation % 360;
+          const correctedAngle = (360 - finalAngle + 90) % 360;
+          const selectedIndex = Math.floor(correctedAngle / arc);
+          result.innerText = `🎉 Selamat! Kamu mendapatkan ${hadiah[selectedIndex]}!`;
+        }
+      }
+
+      requestAnimationFrame(animate);
     }
-  }
-  if (correct) {
-    successMessage.style.display = 'block';  // Menampilkan pesan sukses
-  }
-}
-
-// Memilih gambar acak dan memulai puzzle
-getRandomImageUrl().then(randomImageUrl => {
-  initPuzzle(randomImageUrl);
-});
-
-</script>
-
+  </script>
 </body>
 </html>
