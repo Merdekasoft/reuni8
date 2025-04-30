@@ -36,32 +36,40 @@
 
     .pointer {
       position: absolute;
-      bottom: -40px; /* Move the pointer to the bottom */
+      bottom: -40px;
       left: 50%;
-      transform: translateX(-50%) rotate(180deg); /* Rotate 180 degrees */
+      transform: translateX(-50%) rotate(180deg);
       width: 0;
       height: 0;
       border-left: 30px solid transparent;
       border-right: 30px solid transparent;
-      border-top: 40px solid red; /* Change border to top */
+      border-top: 40px solid red;
       z-index: 2;
     }
 
     button {
       margin-top: 20px;
-      padding: 14px 30px;
-      font-size: 1.2rem;
-      font-weight: bold;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
       border: none;
-      background: #27ae60;
+      background: linear-gradient(to right, #0984e3, #6c5ce7);
       color: white;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      box-shadow: 0 8px 16px rgba(108, 92, 231, 0.3);
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background: #219150;
+      background: linear-gradient(to right, #6c5ce7, #0984e3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
+    }
+
+    button:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);
     }
 
     #result {
@@ -91,7 +99,7 @@
     <div class="pointer"></div>
     <canvas id="wheel"></canvas>
   </div>
-  <button onclick="spin()">Putar Roda</button>
+  <button onclick="spin()">🎲 Putar Roda</button>
   <div id="result"></div>
 
   <script>
@@ -100,7 +108,7 @@
       "🍿 Popcorn Maker", "🎉 Bonus Doorprize", "😅 Coba Lagi", "🪙 Uang Tunai"
     ];
 
-    const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#FF8F33", "#33FFF3", "#F333FF", "#A8FF33"];
+    const colors = ["#00b894", "#55efc4", "#81ecec", "#74b9ff", "#a29bfe", "#ffeaa7", "#fab1a0", "#fd79a8"];
     const canvas = document.getElementById("wheel");
     const ctx = canvas.getContext("2d");
     const result = document.getElementById("result");
@@ -136,7 +144,7 @@
         ctx.textAlign = "center";
         ctx.fillStyle = "#000";
         ctx.font = `${Math.floor(radius * 0.08)}px sans-serif`;
-        ctx.fillText(hadiah[i], radius * 0.65, 0);
+        ctx.fillText(hadiah[i], radius * 0.55, 0);
         ctx.restore();
       }
     }
@@ -166,7 +174,7 @@
           const finalAngle = currentRotation % 360;
           const correctedAngle = (360 - finalAngle + 90) % 360;
           const selectedIndex = Math.floor(correctedAngle / arc);
-          result.innerText = `🎉 Selamat! Kamu mendapatkan ${hadiah[selectedIndex]}!,tapi ini cuma simulasi looo, kalo mau beneran dateng aja hari H yaa`;
+          result.innerText = `🚀 Woohoo! Kamu berhasil memenangkan ${hadiah[selectedIndex]}! Hadiah ini hanya simulasi yaa — tapi semangatnya tetap nyata! 🎊`;
         }
       }
 
