@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Halaman informasi Reuni SMPN 8 Cimahi - grup WA, pendaftaran, donasi, seller, dan iklan.">
   <title>Reuni SMPN 8 Cimahi</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -18,11 +19,19 @@
       padding: 0;
     }
 
+    a, .icon-box, .icon-circle {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      outline: none;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
     .grid-icons {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 5px;
+      gap: 10px;
       padding: 1rem;
       overflow-x: auto;
     }
@@ -60,9 +69,9 @@
     }
 
     .icon-text {
-      font-size: 0.7rem;
-      margin-top: 2px;
+      font-size: 0.75rem;
       text-align: center;
+      margin-top: 2px;
     }
 
     .icon-box:hover .icon-circle {
@@ -75,6 +84,7 @@
       max-width: 100%;
       display: block;
       margin-bottom: 0.5rem;
+      border-radius: 10px;
     }
 
     .banner {
@@ -85,47 +95,49 @@
     }
 
     .banner img {
+      max-height: 300px;
       width: 100%;
-      height: auto;
-      border-radius: 10px;
+      object-fit: contain;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
 <body>
 
-<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQTpbL-MXWPrVuK9k72jGHs1-fyrU_Jy220S8kQL-F38JVpKF7tanwMCSbBtpjhvbn2nWLZhP7DVRA-14smX90yTOo9T9eBtK6InDrnkHPI5AqdYYN3S7LBpSz5ni5YEXORg_YnYKoQeWiywexp2gzsqLgMXUULL9TVUwPD6mHKFynGMiI9vHXKgK7h-0/s661/Nk132No.gif" alt="Header Reuni SMPN 8 Cimahi" class="header-banner">
+<main>
+  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQTpbL-MXWPrVuK9k72jGHs1-fyrU_Jy220S8kQL-F38JVpKF7tanwMCSbBtpjhvbn2nWLZhP7DVRA-14smX90yTOo9T9eBtK6InDrnkHPI5AqdYYN3S7LBpSz5ni5YEXORg_YnYKoQeWiywexp2gzsqLgMXUULL9TVUwPD6mHKFynGMiI9vHXKgK7h-0/s661/Nk132No.gif" alt="Banner Reuni SMPN 8 Cimahi" class="header-banner">
 
-<div class="grid-icons">
-    <a href="https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v" target="_blank" class="icon-box">
+  <div class="grid-icons">
+    <a href="https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v" target="_blank" rel="noopener noreferrer" class="icon-box">
       <div class="icon-circle"><i class="fab fa-whatsapp"></i></div>
       <div class="icon-text">Grup WA</div>
     </a>
 
-    <a href="https://forms.gle/xLwc73fXnMp8yffC6" target="_blank" class="icon-box">
+    <a href="https://forms.gle/xLwc73fXnMp8yffC6" target="_blank" rel="noopener noreferrer" class="icon-box">
       <div class="icon-circle"><i class="fas fa-pencil-alt"></i></div>
       <div class="icon-text">Pendaftaran</div>
     </a>
 
-    <a href="https://sociabuzz.com/reuni8/donate" target="_blank" class="icon-box">
+    <a href="https://sociabuzz.com/reuni8/donate" target="_blank" rel="noopener noreferrer" class="icon-box">
       <div class="icon-circle"><i class="fas fa-heart"></i></div>
       <div class="icon-text">Donasi</div>
     </a>
 
-    <a href="https://forms.gle/jvWVKNzLFxRraHv69" target="_blank" class="icon-box">
+    <a href="https://forms.gle/jvWVKNzLFxRraHv69" target="_blank" rel="noopener noreferrer" class="icon-box">
       <div class="icon-circle"><i class="fa-solid fa-coins"></i></div>
       <div class="icon-text">Seller</div>
     </a>
 
-    <a href="https://forms.gle/ch9c56n1QcoyyUNWA" target="_blank" class="icon-box">
+    <a href="https://forms.gle/ch9c56n1QcoyyUNWA" target="_blank" rel="noopener noreferrer" class="icon-box">
       <div class="icon-circle"><i class="fa-solid fa-rectangle-ad"></i></div>
       <div class="icon-text">Iklan</div>
     </a>
-</div>
+  </div>
 
-<div class="banner" id="banner-container"></div>
+  <div class="banner" id="banner-container"></div>
+</main>
 
 <script>
-  // Fetch and parse the TSV data
   fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRicUXORAEGkbbu4fUy__SIWDFvLcuNMb0KAE8o12rSDsnhwDjrNOCNtzoK10MazJ-B4IEDyyZDyLrF/pub?gid=0&single=true&output=tsv')
     .then(response => response.text())
     .then(data => {
@@ -134,9 +146,9 @@
 
       rows.forEach(row => {
         const columns = row.split('\t');
-        const imageUrl = columns[0];
-        const link = columns[1];
-        const altText = columns[2];
+        const imageUrl = columns[0]?.trim();
+        const link = columns[1]?.trim();
+        const altText = columns[2]?.trim() || "Banner Reuni";
         const urutan = parseInt(columns[8], 10);
 
         if (imageUrl && !isNaN(urutan)) {
@@ -151,13 +163,11 @@
         const anchor = document.createElement('a');
         if (banner.link) anchor.href = banner.link;
         anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
 
         const img = document.createElement('img');
         img.src = banner.imageUrl;
         img.alt = banner.altText;
-        img.style.width = '100%';
-        img.style.height = 'auto';
-        img.style.borderRadius = '10px';
 
         anchor.appendChild(img);
         bannerContainer.appendChild(anchor);
