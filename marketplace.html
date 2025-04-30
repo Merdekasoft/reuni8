@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Marketplace Sederhana</title>
   <style>
+    * {
+      -webkit-tap-highlight-color: transparent; /* Menghilangkan efek tap highlight di Android WebView */
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -18,30 +23,30 @@
     #search-bar {
       display: flex;
       justify-content: center;
-      margin: 0; /* Menghilangkan margin atas dan bawah */
-      padding: 5px; /* Padding tetap compact */
+      padding: 5px;
       position: sticky;
       top: 0;
       background-color: #fff;
-      z-index: 1000; /* Agar tetap di atas konten lain */
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Memberikan bayangan ringan */
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
+
     #search-input {
       flex: 1;
-      max-width: 600px; /* Mengurangi lebar maksimal */
-      padding: 8px 12px; /* Mengurangi padding agar lebih ramping */
+      max-width: 600px;
+      padding: 8px 12px;
       border: 2px solid #ddd;
-      border-radius: 20px; /* Membuat border lebih bulat */
+      border-radius: 20px;
       font-size: 14px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
     }
+
     #search-input:focus {
       border-color: #28a745;
       outline: none;
     }
 
-    /* Grid Layout */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -49,17 +54,21 @@
       padding: 0 20px;
       margin-top: 20px;
     }
+
     .product-card {
+      position: relative;
       background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       overflow: hidden;
       transition: all 0.3s ease;
     }
+
     .product-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
+
     .product-card-content {
       padding: 15px;
       text-align: center;
@@ -72,6 +81,7 @@
       border-radius: 10px;
       transition: transform 0.3s ease;
     }
+
     .product-card:hover .product-image {
       transform: scale(1.05);
     }
@@ -82,12 +92,14 @@
       color: #222;
       margin: 10px 0;
     }
+
     .product-price {
       color: #2a7b2e;
       font-weight: bold;
       font-size: 18px;
       margin-bottom: 10px;
     }
+
     .beli-button {
       margin-top: 10px;
       display: inline-block;
@@ -98,33 +110,40 @@
       font-size: 14px;
       text-decoration: none;
       transition: background-color 0.3s ease;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
+
+    .beli-button:focus {
+      outline: none;
+    }
+
     .beli-button:hover {
       background-color: #218838;
     }
 
-    /* Responsive Design */
     @media (max-width: 768px) {
       #search-input {
         max-width: 500px;
       }
     }
 
-    /* Loading, Error, and No Results */
     #loading, #error, #no-results {
       text-align: center;
       font-style: italic;
       font-size: 16px;
       color: #555;
     }
+
     #loading {
       display: block;
     }
+
     #error, #no-results {
       display: none;
     }
 
-    /* Load More Button */
     #load-more {
       display: block;
       margin: 20px auto;
@@ -136,12 +155,14 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.3s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
+
     #load-more:hover {
       background-color: #0056b3;
     }
 
-    /* Label */
     .product-label {
       position: absolute;
       top: 10px;
@@ -158,16 +179,16 @@
 </head>
 <body>
   <div id="search-bar">
-    <input type="text" id="search-input" placeholder="Cari produk...">
+    <input type="text" id="search-input" placeholder="Cari produk..." />
   </div>
 
   <div id="loading">Memuat produk...</div>
   <div id="error">Terjadi kesalahan saat memuat data.</div>
   <div id="no-results">Produk tidak ditemukan.</div>
-  
+
   <div class="product-grid" id="product-container"></div>
-  
-  <button id="load-more" style="display:none;">Muat Lebih Banyak</button>
+
+  <button id="load-more" style="display: none;">Muat Lebih Banyak</button>
 
   <script>
     const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRz9ttPOi2MczayQndhMHZA_K-MCA2_YjjkcEQ_bluqbbCfpSfnpLHUK1RMNuoYnjq86GLvBkN3tiKK/pub?output=tsv';
@@ -264,11 +285,9 @@
       const keyword = searchInput.value.toLowerCase();
       productContainer.innerHTML = '';
       currentPage = 0;
-      if (keyword) {
-        displayedProducts = allProducts.filter(product => product[0].toLowerCase().includes(keyword));
-      } else {
-        displayedProducts = [...allProducts];
-      }
+      displayedProducts = keyword
+        ? allProducts.filter(product => product[0].toLowerCase().includes(keyword))
+        : [...allProducts];
       displayProducts();
     });
 
