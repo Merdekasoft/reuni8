@@ -97,7 +97,6 @@
       overflow: hidden;
     }
 
-    /* New styles for ad labels at the bottom right */
     .ad-banner-wrapper {
       position: relative;
       margin: 0.5rem auto;
@@ -117,7 +116,7 @@
       right: 8px;
       background-color: rgba(0,0,0,0.7);
       color: white;
-      font-size: 0.5rem; /* Size adjusted for smaller text */
+      font-size: 0.5rem;
       padding: 2px 6px;
       border-radius: 4px;
       font-weight: bold;
@@ -190,7 +189,7 @@
 
         const label = document.createElement('div');
         label.className = 'ad-label';
-        label.textContent = 'ads'; // Label iklan
+        label.textContent = 'Ad'; // label diperbarui jadi 'Ad'
 
         const anchor = document.createElement('a');
         if (banner.link) anchor.href = banner.link;
