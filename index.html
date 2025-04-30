@@ -53,7 +53,6 @@
     .icon-circle {
       width: 50px;
       height: 50px;
-      background: #f5f5f5;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -63,9 +62,14 @@
       transition: background 0.3s, transform 0.3s;
     }
 
+    .icon-circle.wa { background: #25D366; color: white; }
+    .icon-circle.daftar { background: #007BFF; color: white; }
+    .icon-circle.donasi { background: #FF6B6B; color: white; }
+    .icon-circle.seller { background: #FFA500; color: white; }
+    .icon-circle.iklan { background: #6A5ACD; color: white; }
+
     .icon-circle i {
       font-size: 20px;
-      color: #333;
     }
 
     .icon-text {
@@ -75,7 +79,6 @@
     }
 
     .icon-box:hover .icon-circle {
-      background: #e0e0e0;
       transform: scale(1.05);
     }
 
@@ -109,27 +112,27 @@
 
   <div class="grid-icons">
     <a href="https://chat.whatsapp.com/E6rQcDrumDS1QXBKdIeb7v" target="_blank" rel="noopener noreferrer" class="icon-box">
-      <div class="icon-circle"><i class="fab fa-whatsapp"></i></div>
+      <div class="icon-circle wa"><i class="fab fa-whatsapp"></i></div>
       <div class="icon-text">Grup WA</div>
     </a>
 
     <a href="https://forms.gle/xLwc73fXnMp8yffC6" target="_blank" rel="noopener noreferrer" class="icon-box">
-      <div class="icon-circle"><i class="fas fa-pencil-alt"></i></div>
+      <div class="icon-circle daftar"><i class="fas fa-pencil-alt"></i></div>
       <div class="icon-text">Pendaftaran</div>
     </a>
 
     <a href="https://sociabuzz.com/reuni8/donate" target="_blank" rel="noopener noreferrer" class="icon-box">
-      <div class="icon-circle"><i class="fas fa-heart"></i></div>
+      <div class="icon-circle donasi"><i class="fas fa-heart"></i></div>
       <div class="icon-text">Donasi</div>
     </a>
 
     <a href="https://forms.gle/jvWVKNzLFxRraHv69" target="_blank" rel="noopener noreferrer" class="icon-box">
-      <div class="icon-circle"><i class="fa-solid fa-coins"></i></div>
+      <div class="icon-circle seller"><i class="fa-solid fa-coins"></i></div>
       <div class="icon-text">Seller</div>
     </a>
 
     <a href="https://forms.gle/ch9c56n1QcoyyUNWA" target="_blank" rel="noopener noreferrer" class="icon-box">
-      <div class="icon-circle"><i class="fa-solid fa-rectangle-ad"></i></div>
+      <div class="icon-circle iklan"><i class="fa-solid fa-rectangle-ad"></i></div>
       <div class="icon-text">Iklan</div>
     </a>
   </div>
